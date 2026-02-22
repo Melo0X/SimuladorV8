@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEMO CASE — Simulador Financeiro v8.0</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg-primary:#06080c;--bg-card:#10141c;--bg-input:#181d28;--bg-hover:#1e2433;--border:#1c2231;--border-light:#2a3344;--border-focus:#c9973b;--text-primary:#f0f2f5;--text-secondary:#8b95a8;--text-muted:#5a6478;--gold:#c9973b;--gold-soft:rgba(201,151,59,0.12);--green:#2dd47a;--green-soft:rgba(45,212,122,0.12);--blue:#3b8bf6;--blue-soft:rgba(59,139,246,0.12);--orange:#f0913a;--orange-soft:rgba(240,145,58,0.12);--red:#ef4b4b;--red-soft:rgba(239,75,75,0.12);--purple:#9b6bf6;--purple-soft:rgba(155,107,246,0.12);--cyan:#2bc5d9;--cyan-soft:rgba(43,197,217,0.12);--yellow:#e8c94a;--yellow-soft:rgba(232,201,74,0.12);}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.55;font-size:14px;min-height:100vh;}
+    .container{max-width:1440px;margin:0 auto;padding:28px 20px 80px;}
+    .header{text-align:center;margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--border);position:relative;}
+    .header::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+    .logo{font-size:34px;font-weight:800;letter-spacing:-1.5px;background:linear-gradient(135deg,#fff 20%,var(--gold) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .subtitle{color:var(--text-secondary);font-size:15px;margin-top:4px;}
+    .version-badge{display:inline-block;margin-top:12px;padding:4px 14px;background:var(--green-soft);color:var(--green);border:1px solid rgba(45,212,122,0.25);border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.5px;}
+    .meta-banner{display:flex;align-items:center;gap:0;margin-bottom:28px;border-radius:16px;overflow:hidden;border:1px solid var(--border);}
+    .meta-level{flex:1;text-align:center;padding:14px 8px;cursor:default;border-right:1px solid var(--border);transition:all .3s;}
+    .meta-level:last-child{border-right:none;}
+    .meta-level .meta-icon{font-size:16px;margin-bottom:2px;}
+    .meta-level .meta-name{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.5;}
+    .meta-level .meta-range{font-size:13px;font-weight:600;margin-top:2px;opacity:.5;}
+    .meta-level.active .meta-name,.meta-level.active .meta-range{opacity:1;}
+    .meta-level.active{position:relative;}
+    .meta-level.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+    .meta-sobrevivencia{background:var(--red-soft);}.meta-sobrevivencia.active{background:rgba(239,75,75,0.2);}.meta-sobrevivencia .meta-name,.meta-sobrevivencia .meta-range{color:var(--red);}.meta-sobrevivencia.active::after{background:var(--red);}
+    .meta-base{background:var(--yellow-soft);}.meta-base.active{background:rgba(232,201,74,0.2);}.meta-base .meta-name,.meta-base .meta-range{color:var(--yellow);}.meta-base.active::after{background:var(--yellow);}
+    .meta-meta{background:var(--green-soft);}.meta-meta.active{background:rgba(45,212,122,0.2);}.meta-meta .meta-name,.meta-meta .meta-range{color:var(--green);}.meta-meta.active::after{background:var(--green);}
+    .meta-stretch{background:var(--blue-soft);}.meta-stretch.active{background:rgba(59,139,246,0.2);}.meta-stretch .meta-name,.meta-stretch .meta-range{color:var(--blue);}.meta-stretch.active::after{background:var(--blue);}
+    .main-grid{display:grid;gap:20px;}@media(min-width:1024px){.main-grid{grid-template-columns:1fr 1fr;}}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:22px;}
+    .card-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+    .card-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+    .card-title{font-weight:700;font-size:15px;}.card-subtitle{font-size:12px;color:var(--text-muted);margin-top:1px;}
+    .input-group{display:flex;flex-direction:column;gap:5px;}.input-label{font-size:11px;color:var(--text-secondary);display:flex;align-items:center;gap:5px;font-weight:500;}
+    .input-wrap{position:relative;}.input-prefix,.input-suffix{position:absolute;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:13px;pointer-events:none;}.input-prefix{left:12px;}.input-suffix{right:12px;}
+    input[type="number"]{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text-primary);font-family:inherit;font-size:14px;font-weight:600;transition:border-color .2s;-moz-appearance:textfield;}
+    input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;}
+    input[type="number"]:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px var(--gold-soft);}
+    .has-prefix input{padding-left:36px;}.has-suffix input{padding-right:44px;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+    .section-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;margin-top:12px;}.section-label:first-child{margin-top:0;}
+    .collapsible-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:16px 18px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;transition:all .2s;}
+    .collapsible-header:hover{border-color:var(--border-light);background:var(--bg-hover);}
+    .collapsible-header .ch-left{display:flex;align-items:center;gap:10px;}
+    .collapsible-header .ch-title{font-weight:700;font-size:14px;}
+    .collapsible-header .ch-total{font-weight:800;font-size:15px;}
+    .collapsible-header .ch-arrow{font-size:11px;color:var(--text-muted);transition:transform .3s;}
+    .collapsible-header.open .ch-arrow{transform:rotate(90deg);}
+    .collapsible-header.open{border-radius:14px 14px 0 0;}
+    .collapsible-body{max-height:0;overflow:hidden;transition:max-height .35s ease;border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;background:var(--bg-card);}
+    .collapsible-body.open{max-height:800px;}
+    .collapsible-body-inner{padding:18px;}
+    .func-card{background:var(--bg-input);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
+    .func-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .func-name{font-weight:700;font-size:13px;}
+    .func-remove{background:var(--red-soft);border:1px solid rgba(239,75,75,0.25);color:var(--red);width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;}.func-remove:hover{background:rgba(239,75,75,0.25);}
+    .func-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+    .func-stat{background:var(--bg-card);border-radius:8px;padding:8px 10px;text-align:center;}
+    .func-stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;}
+    .func-stat-value{font-size:14px;font-weight:700;margin-top:2px;}
+    .func-total{background:var(--gold-soft);border:1px solid rgba(201,151,59,0.2);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;color:var(--gold);}
+    .btn-add-func{width:100%;padding:10px;background:var(--bg-input);border:2px dashed var(--border-light);border-radius:12px;color:var(--text-secondary);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:12px;}.btn-add-func:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-soft);}
+    .result-box{border-radius:14px;padding:16px;text-align:center;}
+    .result-label{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;opacity:.7;}
+    .result-value{font-size:24px;font-weight:800;margin-top:4px;letter-spacing:-0.5px;}
+    .result-sub{font-size:11px;opacity:.6;margin-top:4px;}
+    .dre-row{display:flex;justify-content:space-between;padding:9px 0;font-size:13px;}
+    .dre-row+.dre-row{border-top:1px solid var(--border);}
+    .dre-highlight{border-radius:10px;padding:10px 14px !important;margin:4px -6px;border:none !important;}
+    .dre-row.red span:last-child{color:var(--red);}
+    .be-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+    .be-card{background:var(--bg-input);border-radius:12px;padding:14px;text-align:center;}
+    .be-value{font-size:28px;font-weight:800;}.be-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px;}
+    .status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:700;}
+    .status-lucrativo{background:var(--green-soft);color:var(--green);border:1px solid rgba(45,212,122,0.25);}
+    .status-prejuizo{background:var(--red-soft);color:var(--red);border:1px solid rgba(239,75,75,0.25);}
+    .roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .roi-card{background:var(--bg-input);border-radius:12px;padding:14px;text-align:center;}.roi-card-accent{border:1px solid;}
+    .progress-wrap{margin-top:14px;}.progress-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:6px;}
+    .progress-bar{height:6px;background:var(--bg-input);border-radius:100px;overflow:hidden;}.progress-fill{height:100%;border-radius:100px;transition:width .4s ease;}
+    .info-box{border-radius:12px;padding:12px 14px;font-size:12px;margin-top:12px;}
+    .expansion-section{margin-top:32px;padding-top:28px;border-top:2px solid var(--border);}
+    .expansion-card{background:linear-gradient(135deg,rgba(59,139,246,0.06),rgba(155,107,246,0.06));border:1px solid rgba(59,139,246,0.2);border-radius:20px;padding:28px;}
+    .expansion-title{font-size:22px;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .expansion-subtitle{font-size:13px;color:var(--text-muted);margin-bottom:24px;}
+    .socios-card{background:linear-gradient(135deg,rgba(201,151,59,0.06),rgba(240,145,58,0.06));border:1px solid rgba(201,151,59,0.2);border-radius:20px;padding:28px;margin-top:20px;}
+    .socios-title{font-size:22px;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .socios-subtitle{font-size:13px;color:var(--text-muted);margin-bottom:24px;}
+    .socio-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg-input);border-radius:10px;margin-bottom:8px;min-height:44px;}
+    .socio-name{font-weight:700;font-size:14px;min-width:80px;}
+    .socio-pct{font-size:13px;color:var(--text-secondary);min-width:60px;text-align:center;display:flex;align-items:center;justify-content:center;gap:2px;}
+    .socio-value{font-weight:800;font-size:15px;}
+    .socio-input{width:40px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:2px 4px;color:var(--text-primary);font-family:inherit;font-size:13px;font-weight:700;text-align:center;-moz-appearance:textfield;}
+    .socio-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+    .socio-input:focus{outline:none;border-color:var(--border-focus);}
+    .divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
+    .note-box{background:var(--bg-input);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text-muted);margin-top:16px;line-height:1.7;}
+    .footer{text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);color:var(--text-muted);font-size:11px;line-height:1.8;}.footer strong{color:var(--text-secondary);}
+    @media(max-width:640px){.be-grid{grid-template-columns:1fr;}.meta-banner{flex-direction:column;}.meta-level{border-right:none;border-bottom:1px solid var(--border);}.meta-level:last-child{border-bottom:none;}.grid-3{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">MEMO CASE</div>
+    <div class="subtitle">Simulador Financeiro — Modelo Kiosk Premium</div>
+    <div class="version-badge">✓ v8.0 — Multi-Kiosks + Divisão de Lucros</div>
+  </div>
+  <div class="meta-banner">
+    <div class="meta-level meta-sobrevivencia" id="metaSobrevivencia"><div class="meta-icon">🔴</div><div class="meta-name">Sobrevivência</div><div class="meta-range">≤ 10/dia</div></div>
+    <div class="meta-level meta-base" id="metaBase"><div class="meta-icon">🟡</div><div class="meta-name">Base</div><div class="meta-range">20/dia</div></div>
+    <div class="meta-level meta-meta" id="metaMeta"><div class="meta-icon">🟢</div><div class="meta-name">Meta</div><div class="meta-range">30/dia</div></div>
+    <div class="meta-level meta-stretch" id="metaStretch"><div class="meta-icon">🔵</div><div class="meta-name">Stretch</div><div class="meta-range">40+/dia</div></div>
+  </div>
+  <div class="main-grid">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <!-- Vendas -->
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--green-soft);">💰</div><div><div class="card-title">Vendas & Produto</div><div class="card-subtitle">Configure preço e volume</div></div></div>
+        <div class="grid-2">
+          <div class="input-group"><div class="input-label">🏷️ Preço de Venda</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="precoVenda" value="129" step="1" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">📦 Capas / Dia</div><div class="input-wrap has-suffix"><input type="number" id="capasPerDay" value="25" step="1" min="0" oninput="calcular()"><span class="input-suffix">/dia</span></div></div>
+        </div>
+        <div class="func-stats" style="margin-top:14px;"><div class="func-stat"><div class="func-stat-label">Vendas / Mês</div><div class="func-stat-value" id="vendasMes">750</div></div><div class="func-stat"><div class="func-stat-label">Faturamento Bruto</div><div class="func-stat-value" id="faturamentoBruto" style="color:var(--green);">R$ 96.750</div></div></div>
+      </div>
+      <!-- Equipe -->
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">👥</div><div><div class="card-title">Equipe & Comissão</div><div class="card-subtitle">Salário fixo + comissão por unidade vendida</div></div></div>
+        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-prefix has-suffix"><span class="input-prefix">R$</span><input type="number" id="comissaoUnitaria" value="3.00" step="0.50" min="0" oninput="calcular()"><span class="input-suffix">/un</span></div></div>
+        <div id="funcContainer"></div>
+        <button class="btn-add-func" onclick="addFuncionario()">+ Adicionar Funcionário</button>
+        <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
+      </div>
+      <!-- Custos Variáveis Colapsável -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('cv')"><div class="ch-left"><span style="font-size:16px;">📊</span><span class="ch-title">Custos Variáveis</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="cvTotal" style="color:var(--orange);">R$ 21,66/un</span><span class="ch-arrow" id="cvArrow">▶</span></div></div>
+        <div class="collapsible-body" id="cvBody"><div class="collapsible-body-inner"><div class="grid-2">
+          <div class="input-group"><div class="input-label">📱 Capinha</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoCapinha" value="16.71" step="0.01" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">🎨 Tinta</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoTinta" value="0.45" step="0.01" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">🔧 Manutenção</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoManutencao" value="1.50" step="0.01" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">🛍️ Embalagem</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoEmbalagem" value="3.00" step="0.01" min="0" oninput="calcular()"></div></div>
+        </div></div></div>
+      </div>
+      <!-- Custos Fixos Colapsável -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('cf')"><div class="ch-left"><span style="font-size:16px;">🏢</span><span class="ch-title">Custos Fixos Mensais</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="cfTotal" style="color:var(--blue);">R$ 19.600</span><span class="ch-arrow" id="cfArrow">▶</span></div></div>
+        <div class="collapsible-body" id="cfBody"><div class="collapsible-body-inner">
+          <div class="section-label">Estrutura (multiplicam por kiosk)</div>
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">🏬 Aluguel</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="aluguel" value="12000" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">⚡ Energia+Internet</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="energia" value="600" step="50" min="0" oninput="calcular()"></div></div>
+          </div>
+          <div class="section-label">Compartilhados (não multiplicam)</div>
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">💻 Sistema</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="sistema" value="400" step="50" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">📋 Contabilidade</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="contabilidade" value="600" step="50" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">📱 Tráfego</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="trafego" value="3000" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">🎬 Agência</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="agencia" value="3000" step="100" min="0" oninput="calcular()"></div></div>
+          </div>
+        </div></div>
+      </div>
+      <!-- CAPEX Colapsável -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('capex')"><div class="ch-left"><span style="font-size:16px;">💎</span><span class="ch-title">CAPEX & Financiamento</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="capexHeaderTotal" style="color:var(--cyan);">R$ 149.177</span><span class="ch-arrow" id="capexArrow">▶</span></div></div>
+        <div class="collapsible-body" id="capexBody"><div class="collapsible-body-inner">
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">🖨️ Máquina</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="capexMaquina" value="70757" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">🏗️ Estrutura</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="capexEstrutura" value="40000" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">📦 Estoque</div><div class="input-wrap has-suffix"><input type="number" id="estoqueInicial" value="2000" step="100" min="0" oninput="calcular()"><span class="input-suffix">un</span></div></div>
+            <div class="input-group"><div class="input-label">🎨 Comunicação</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="capexComunicacao" value="10000" step="100" min="0" oninput="calcular()"></div></div>
+          </div>
+          <div class="section-label">Financiamento</div>
+          <div class="grid-3">
+            <div class="input-group"><div class="input-label">🏦 Juros</div><div class="input-wrap has-suffix"><input type="number" id="taxaJuros" value="5" step="0.5" min="0" oninput="calcular()"><span class="input-suffix">% a.a.</span></div></div>
+            <div class="input-group"><div class="input-label">📅 Vida Máq.</div><div class="input-wrap has-suffix"><input type="number" id="vidaUtilMaquina" value="60" step="6" min="1" oninput="calcular()"><span class="input-suffix">meses</span></div></div>
+            <div class="input-group"><div class="input-label">📅 Vida Estr.</div><div class="input-wrap has-suffix"><input type="number" id="vidaUtilEstrutura" value="60" step="6" min="1" oninput="calcular()"><span class="input-suffix">meses</span></div></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px;"><div class="func-stat" style="flex:1;"><div class="func-stat-label">Depreciação/mês</div><div class="func-stat-value" id="depreciacaoMes">R$ 1.846</div></div><div class="func-stat" style="flex:1;"><div class="func-stat-label">Juros/mês</div><div class="func-stat-value" id="jurosMes">R$ 622</div></div></div>
+        </div></div>
+      </div>
+      <!-- Resumo Comissão Colapsável -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('comis')"><div class="ch-left"><span style="font-size:16px;">📈</span><span class="ch-title">Resumo da Comissão</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="resumoComissaoTotal" style="color:var(--gold);">R$ 2.250</span><span class="ch-arrow" id="comisArrow">▶</span></div></div>
+        <div class="collapsible-body" id="comisBody"><div class="collapsible-body-inner"><div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão / case</span><span style="font-size:14px;font-weight:700;color:var(--gold);" id="resumoComissaoUnit">R$ 3,00</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Vendas / funcionário</span><span style="font-size:14px;font-weight:700;" id="resumoVendasFunc">375</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão / funcionário</span><span style="font-size:14px;font-weight:700;color:var(--green);" id="resumoComissaoFunc">R$ 1.125</span></div>
+        </div></div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div class="card"><div class="card-header"><div class="card-icon" style="background:var(--gold-soft);">🎯</div><div><div class="card-title">Ponto de Equilíbrio</div><div class="card-subtitle">Break-even mensal</div></div></div><div class="be-grid"><div class="be-card"><div class="be-value" id="beCapas">0</div><div class="be-label">capas / mês</div></div><div class="be-card"><div class="be-value" id="beDia">~0</div><div class="be-label">capas / dia</div></div><div class="be-card"><div class="be-value" id="beFaturamento" style="font-size:20px;">R$ 0</div><div class="be-label">faturamento mín.</div></div></div></div>
+      <div class="card"><div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">📈</div><div><div class="card-title">Situação Atual</div><div class="card-subtitle">Com base nos parâmetros</div></div></div><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><span class="status-badge" id="statusBadge"><span id="statusIcon">✓</span> <span id="statusText">Operação Lucrativa</span></span><span id="statusDiff" style="font-size:13px;font-weight:600;"></span></div></div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--green-soft);">📊</div><div><div class="card-title">Resultado Financeiro</div><div class="card-subtitle">EBITDA e Lucro Líquido</div></div></div>
+        <div class="grid-2"><div class="result-box" style="background:var(--gold-soft);border:1px solid rgba(201,151,59,0.2);"><div class="result-label" style="color:var(--gold);">EBITDA</div><div class="result-value" style="color:var(--gold);" id="ebitdaValor">R$ 0</div><div class="result-sub" style="color:var(--gold);" id="ebitdaPct">0%</div></div><div class="result-box" id="lucroBox" style="background:var(--green-soft);border:1px solid rgba(45,212,122,0.2);"><div class="result-label" id="lucroLabel" style="color:var(--green);">Lucro Líquido</div><div class="result-value" id="lucroValor" style="color:var(--green);">R$ 0</div><div class="result-sub" id="lucroPct" style="color:var(--green);">0%</div></div></div>
+        <div class="info-box" style="background:var(--cyan-soft);border:1px solid rgba(43,197,217,0.15);"><div style="font-weight:700;color:var(--cyan);font-size:11px;margin-bottom:4px;">💡 Diferença EBITDA → Lucro</div><div style="color:var(--text-secondary);font-size:12px;" id="diffEbitdaLucro"></div></div>
+        <div class="func-stat" style="margin-top:10px;"><div class="func-stat-label">Simples Nacional (Anexo I)</div><div class="func-stat-value" style="color:var(--blue);" id="simplesAliquota">0%</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px;" id="simplesFaixa"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon" style="background:var(--red-soft);">📋</div><div><div class="card-title">DRE Mensal</div><div class="card-subtitle">Demonstrativo — 1 Kiosk</div></div></div>
+        <div>
+          <div class="dre-row"><span style="font-weight:700;">Receita Bruta</span><span style="font-weight:700;" id="dreReceita"></span></div>
+          <div class="dre-row red"><span id="dreImpostosLabel">(-) Impostos</span><span id="dreImpostos"></span></div>
+          <div class="dre-row red"><span>(-) Custos Variáveis</span><span id="dreCustosVar"></span></div>
+          <div class="dre-row"><span style="font-weight:700;">Margem Contribuição</span><span style="font-weight:700;" id="dreMargem"></span></div>
+          <div class="dre-row red"><span>(-) Custos Fixos</span><span id="dreCustosFixos"></span></div>
+          <div class="dre-row red"><span>(-) Equipe</span><span id="dreEquipe"></span></div>
+          <div class="dre-row dre-highlight" style="background:var(--gold-soft);"><span style="font-weight:800;color:var(--gold);">EBITDA</span><span style="font-weight:800;color:var(--gold);" id="dreEbitda"></span></div>
+          <div class="dre-row red" style="font-size:12px;padding-left:16px;"><span>(-) D&A + Juros</span><span id="dreDA"></span></div>
+          <div class="dre-row dre-highlight" id="dreLucroRow" style="background:var(--green-soft);"><span style="font-weight:800;" id="dreLucroLabel">LUCRO LÍQUIDO</span><span style="font-weight:800;" id="dreLucroValor"></span></div>
+        </div>
+      </div>
+      <!-- ROI Colapsável -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('roi')"><div class="ch-left"><span style="font-size:16px;">💎</span><span class="ch-title">ROI & Payback</span></div><div style="display:flex;align-items:center;gap:16px;"><span class="ch-total" id="roiPaybackHeader" style="color:var(--blue);font-size:14px;">~6,8m</span><span class="ch-total" id="roiMensalHeader" style="color:var(--green);font-size:14px;">14,7%/mês</span><span class="ch-arrow" id="roiArrow">▶</span></div></div>
+        <div class="collapsible-body" id="roiBody"><div class="collapsible-body-inner">
+          <div class="roi-grid"><div class="roi-card roi-card-accent" style="border-color:rgba(201,151,59,0.3);background:var(--gold-soft);"><div class="result-label" style="color:var(--gold);">CAPEX</div><div class="result-value" style="font-size:20px;color:var(--gold);" id="roiCapex"></div></div><div class="roi-card roi-card-accent" style="border-color:rgba(59,139,246,0.3);background:var(--blue-soft);"><div class="result-label" style="color:var(--blue);">Payback</div><div class="result-value" style="font-size:20px;color:var(--blue);" id="roiPayback"></div></div><div class="roi-card"><div class="func-stat-label">ROI Mensal</div><div class="func-stat-value" id="roiMensal"></div></div><div class="roi-card"><div class="func-stat-label">ROI Anual</div><div class="func-stat-value" id="roiAnual"></div></div></div>
+          <div class="progress-wrap"><div class="progress-labels"><span>Progresso para Payback</span><span id="progressLabel" style="color:var(--gold);"></span></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPANSÃO MULTI-KIOSKS -->
+  <div class="expansion-section" id="expansionSection" style="display:none;">
+    <div class="expansion-card">
+      <div class="expansion-title">🏪 Expansão Multi-Kiosks</div>
+      <div class="expansion-subtitle">Projeção consolidada — todos os kiosks com mesmo desempenho</div>
+      <div class="input-group" style="max-width:200px;margin-bottom:24px;"><div class="input-label">Número de Kiosks</div><div class="input-wrap has-suffix"><input type="number" id="numKiosks" value="2" step="1" min="2" max="50" oninput="calcular()"><span class="input-suffix">kiosks</span></div></div>
+      <div id="expansionDRE"></div>
+      <div class="note-box">ⓘ Premissa: Todos os kiosks com mesmo desempenho. Custos compartilhados (contabilidade, sistema, tráfego, agência) não multiplicam por N.</div>
+    </div>
+    <div class="socios-card">
+      <div class="socios-title">💰 Caixa vs Sócios</div>
+      <div class="socios-subtitle">Divisão do Lucro Líquido Total</div>
+      <div class="socio-row"><span class="socio-name">🏦 Caixa</span><span class="socio-pct"><input type="number" class="socio-input" id="pctCaixa" value="60" min="0" max="100" step="1" oninput="calcular()">%</span><span class="socio-value" id="valorCaixa" style="color:var(--green);">R$ 0</span></div>
+      <div class="socio-row"><span class="socio-name">👥 Sócios</span><span class="socio-pct" id="pctSocios">(40%)</span><span class="socio-value" id="valorSocios" style="color:var(--cyan);">R$ 0</span></div>
+      <hr class="divider">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px;">Divisão de Lucros</div>
+      <div class="socio-row"><span class="socio-name">Melo</span><span class="socio-pct"><input type="number" class="socio-input" id="pctMelo" value="50" min="0" max="100" step="1" oninput="calcular()">%</span><span class="socio-value" id="valorMelo" style="color:var(--cyan);">R$ 0</span></div>
+      <div class="socio-row"><span class="socio-name">Leo</span><span class="socio-pct" id="pctLeo">(25%)</span><span class="socio-value" id="valorLeo" style="color:var(--cyan);">R$ 0</span></div>
+      <div class="socio-row"><span class="socio-name">Ícaro</span><span class="socio-pct" id="pctIcaro">(25%)</span><span class="socio-value" id="valorIcaro" style="color:var(--cyan);">R$ 0</span></div>
+    </div>
+  </div>
+  <div class="footer"><strong>MEMO CASE</strong> — Simulador Financeiro v8.0<br>Multi-Kiosks • Divisão de Lucros • Comissão por unidade • Faixas de meta</div>
+</div>
+<script>
+  function formatC(v){return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});}
+  function formatCD(v){return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function calcSimples(fa){
+    let n,d,f;
+    if(fa<=180000){n=0.04;d=0;f='Até R$ 180k';}
+    else if(fa<=360000){n=0.055;d=2700;f='R$ 180k – R$ 360k';}
+    else if(fa<=720000){n=0.076;d=10260;f='R$ 360k – R$ 720k';}
+    else if(fa<=1800000){n=0.082;d=14580;f='R$ 720k – R$ 1.8M';}
+    else if(fa<=3600000){n=0.095;d=37980;f='R$ 1.8M – R$ 3.6M';}
+    else if(fa<=4800000){n=0.11;d=91980;f='R$ 3.6M – R$ 4.8M';}
+    else{n=0.11;d=91980;f='Acima R$ 4.8M';}
+    const ef=fa>0?((fa*n)-d)/fa:0;
+    return{aliquota:Math.max(ef,0),faixa:f+' anual'};
+  }
+  function toggleCollapse(id){
+    const b=document.getElementById(id+'Body'),a=document.getElementById(id+'Arrow'),h=a.closest('.collapsible-header');
+    b.classList.toggle('open');h.classList.toggle('open');
+    a.textContent=b.classList.contains('open')?'▼':'▶';
+  }
+  let funcionarios=[{id:1,salarioFixo:2000},{id:2,salarioFixo:2000}];
+  let nextFuncId=3;
+  function addFuncionario(){funcionarios.push({id:nextFuncId,salarioFixo:2000});nextFuncId++;renderFuncionarios();calcular();}
+  function removeFuncionario(id){if(funcionarios.length<=1)return;funcionarios=funcionarios.filter(f=>f.id!==id);renderFuncionarios();calcular();}
+  function updateSalario(id,v){const f=funcionarios.find(x=>x.id===id);if(f){f.salarioFixo=parseFloat(v)||0;atualizarStats();calcular();}}
+  function calcEquipe(){
+    const cpd=parseFloat(document.getElementById('capasPerDay').value)||0;
+    const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
+    const cm=cpd*30,n=funcionarios.length,vpf=n>0?Math.floor(cm/n):0;
+    let total=0;
+    const dados=funcionarios.map((f,i)=>{const com=vpf*cu,st=f.salarioFixo+com;total+=st;return{id:f.id,nome:'Funcionário '+(i+1),sf:f.salarioFixo,vpf,com,st};});
+    return{dados,total,vpf,comTotal:n>0?vpf*cu*n:0};
+  }
+  function atualizarStats(){
+    const eq=calcEquipe();
+    eq.dados.forEach(d=>{
+      const s=document.getElementById('func-stats-'+d.id);
+      if(s)s.innerHTML='<div class="func-stat"><div class="func-stat-label">Vendas Atrib.</div><div class="func-stat-value">'+d.vpf+' capas</div></div><div class="func-stat"><div class="func-stat-label">Comissão</div><div class="func-stat-value" style="color:var(--green);">+ '+formatC(d.com)+'</div></div>';
+      const t=document.getElementById('func-total-'+d.id);if(t)t.textContent=formatC(d.st);
+      const nm=document.getElementById('func-nome-'+d.id);if(nm)nm.textContent='👤 '+d.nome;
+    });
+    document.getElementById('custoEquipeValor').textContent=formatC(eq.total);
+  }
+  function renderFuncionarios(){
+    const c=document.getElementById('funcContainer'),eq=calcEquipe();
+    c.innerHTML=eq.dados.map(d=>'<div class="func-card"><div class="func-header"><div class="func-name" id="func-nome-'+d.id+'">👤 '+d.nome+'</div>'+(funcionarios.length>1?'<button class="func-remove" onclick="removeFuncionario('+d.id+')">×</button>':'')+'</div><div class="input-group"><div class="input-label">💵 Salário Fixo</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="func-salario-'+d.id+'" value="'+d.sf+'" step="100" min="0" oninput="updateSalario('+d.id+',this.value)"></div></div><div class="func-stats" id="func-stats-'+d.id+'" style="grid-template-columns:1fr 1fr;"><div class="func-stat"><div class="func-stat-label">Vendas Atrib.</div><div class="func-stat-value">'+d.vpf+' capas</div></div><div class="func-stat"><div class="func-stat-label">Comissão</div><div class="func-stat-value" style="color:var(--green);">+ '+formatC(d.com)+'</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:8px 10px;background:var(--bg-card);border-radius:8px;"><span style="font-size:11px;color:var(--text-muted);font-weight:600;">SALÁRIO TOTAL</span><span style="font-size:15px;font-weight:800;" id="func-total-'+d.id+'">'+formatC(d.st)+'</span></div></div>').join('');
+    document.getElementById('custoEquipeValor').textContent=formatC(eq.total);
+  }
+  function updateMeta(cpd){
+    ['metaSobrevivencia','metaBase','metaMeta','metaStretch'].forEach(id=>document.getElementById(id).classList.remove('active'));
+    if(cpd>=40)document.getElementById('metaStretch').classList.add('active');
+    else if(cpd>=25)document.getElementById('metaMeta').classList.add('active');
+    else if(cpd>=15)document.getElementById('metaBase').classList.add('active');
+    else document.getElementById('metaSobrevivencia').classList.add('active');
+  }
+  function calcular(){
+    const pv=parseFloat(document.getElementById('precoVenda').value)||0;
+    const cpd=parseFloat(document.getElementById('capasPerDay').value)||0;
+    const cc=parseFloat(document.getElementById('custoCapinha').value)||0;
+    const ct=parseFloat(document.getElementById('custoTinta').value)||0;
+    const cm=parseFloat(document.getElementById('custoManutencao').value)||0;
+    const ce=parseFloat(document.getElementById('custoEmbalagem').value)||0;
+    const alg=parseFloat(document.getElementById('aluguel').value)||0;
+    const eng=parseFloat(document.getElementById('energia').value)||0;
+    const sis=parseFloat(document.getElementById('sistema').value)||0;
+    const con=parseFloat(document.getElementById('contabilidade').value)||0;
+    const trf=parseFloat(document.getElementById('trafego').value)||0;
+    const agn=parseFloat(document.getElementById('agencia').value)||0;
+    const cxm=parseFloat(document.getElementById('capexMaquina').value)||0;
+    const cxe=parseFloat(document.getElementById('capexEstrutura').value)||0;
+    const est=parseFloat(document.getElementById('estoqueInicial').value)||0;
+    const cxc=parseFloat(document.getElementById('capexComunicacao').value)||0;
+    const tj=parseFloat(document.getElementById('taxaJuros').value)||0;
+    const vum=parseFloat(document.getElementById('vidaUtilMaquina').value)||1;
+    const vue=parseFloat(document.getElementById('vidaUtilEstrutura').value)||1;
+    const capasMes=cpd*30,recBruta=capasMes*pv,fatAnual=recBruta*12;
+    const capexEst=est*cc,capexTotal=cxm+cxe+capexEst+cxc;
+    const dep=(cxm/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
+    const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
+    const cvUnit=cc+ct+cm+ce,cvMes=capasMes*cvUnit;
+    const mc=recLiq-cvMes;
+    const cfPorKiosk=alg+eng,cfCompart=sis+con+trf+agn,cfTotal1=cfPorKiosk+cfCompart;
+    const eq=calcEquipe(),custoEq=eq.total;
+    atualizarStats();
+    const ebitda=mc-cfTotal1-custoEq,lucroLiq=ebitda-dep-juros;
+    const mEbitda=recBruta>0?(ebitda/recBruta)*100:0,mLiq=recBruta>0?(lucroLiq/recBruta)*100:0;
+    const mcUnit=pv>0?pv-cvUnit-(pv*simp.aliquota):0;
+    const cfTotaisFixos=cfTotal1+custoEq+dep+juros;
+    const beCapas=mcUnit>0?Math.ceil(cfTotaisFixos/mcUnit):0,beDia=Math.ceil(beCapas/30),beFat=beCapas*pv;
+    const payback=lucroLiq>0?capexTotal/lucroLiq:Infinity;
+    const roiM=capexTotal>0?(lucroLiq/capexTotal)*100:0,roiA=roiM*12;
+    const isLuc=lucroLiq>0,diffBE=capasMes-beCapas;
+    updateMeta(cpd);
+    document.getElementById('vendasMes').textContent=capasMes;
+    document.getElementById('faturamentoBruto').textContent=formatC(recBruta);
+    document.getElementById('cvTotal').textContent=formatCD(cvUnit)+'/un';
+    document.getElementById('cfTotal').textContent=formatC(cfTotal1);
+    document.getElementById('capexHeaderTotal').textContent=formatC(capexTotal);
+    document.getElementById('depreciacaoMes').textContent=formatC(dep);
+    document.getElementById('jurosMes').textContent=formatC(juros);
+    const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
+    document.getElementById('resumoComissaoUnit').textContent=formatCD(cu);
+    document.getElementById('resumoVendasFunc').textContent=eq.vpf+' capas';
+    document.getElementById('resumoComissaoFunc').textContent=formatC(eq.vpf*cu);
+    document.getElementById('resumoComissaoTotal').textContent=formatC(eq.comTotal);
+    document.getElementById('beCapas').textContent=beCapas;
+    document.getElementById('beDia').textContent='~'+beDia;
+    document.getElementById('beFaturamento').textContent=formatC(beFat);
+    const sb=document.getElementById('statusBadge');
+    sb.className='status-badge '+(isLuc?'status-lucrativo':'status-prejuizo');
+    document.getElementById('statusIcon').textContent=isLuc?'✓':'✕';
+    document.getElementById('statusText').textContent=isLuc?'Operação Lucrativa':'Operação com Prejuízo';
+    const sd=document.getElementById('statusDiff');
+    sd.textContent=(isLuc?'+':'')+diffBE+' capas '+(isLuc?'acima':'abaixo')+' do break-even';
+    sd.style.color=isLuc?'var(--green)':'var(--red)';
+    document.getElementById('ebitdaValor').textContent=formatC(ebitda);
+    document.getElementById('ebitdaPct').textContent=mEbitda.toFixed(1)+'%';
+    document.getElementById('lucroValor').textContent=formatC(lucroLiq);
+    document.getElementById('lucroPct').textContent=mLiq.toFixed(1)+'%';
+    const lb=document.getElementById('lucroBox'),ll=document.getElementById('lucroLabel'),lv=document.getElementById('lucroValor'),lp=document.getElementById('lucroPct');
+    if(isLuc){lb.style.background='var(--green-soft)';lb.style.borderColor='rgba(45,212,122,0.2)';ll.style.color=lv.style.color=lp.style.color='var(--green)';}
+    else{lb.style.background='var(--red-soft)';lb.style.borderColor='rgba(239,75,75,0.2)';ll.style.color=lv.style.color=lp.style.color='var(--red)';}
+    document.getElementById('diffEbitdaLucro').textContent=formatC(ebitda-lucroLiq)+' deduzidos: Depreciação ('+formatC(dep)+') + Juros ('+formatC(juros)+')';
+    document.getElementById('simplesAliquota').textContent=(simp.aliquota*100).toFixed(1)+'%';
+    document.getElementById('simplesFaixa').textContent=simp.faixa;
+    document.getElementById('dreReceita').textContent=formatC(recBruta);
+    document.getElementById('dreImpostosLabel').textContent='(-) Impostos ('+(simp.aliquota*100).toFixed(1)+'%)';
+    document.getElementById('dreImpostos').textContent='- '+formatC(impostos);
+    document.getElementById('dreCustosVar').textContent='- '+formatC(cvMes);
+    document.getElementById('dreMargem').textContent=formatC(mc);
+    document.getElementById('dreCustosFixos').textContent='- '+formatC(cfTotal1);
+    document.getElementById('dreEquipe').textContent='- '+formatC(custoEq);
+    document.getElementById('dreEbitda').textContent=formatC(ebitda);
+    document.getElementById('dreDA').textContent='- '+formatC(dep+juros);
+    document.getElementById('dreLucroValor').textContent=formatC(lucroLiq)+' ('+mLiq.toFixed(1)+'%)';
+    const dlr=document.getElementById('dreLucroRow'),dll=document.getElementById('dreLucroLabel'),dlv=document.getElementById('dreLucroValor');
+    if(isLuc){dlr.style.background='var(--green-soft)';dll.style.color=dlv.style.color='var(--green)';}
+    else{dlr.style.background='var(--red-soft)';dll.style.color=dlv.style.color='var(--red)';}
+    document.getElementById('roiCapex').textContent=formatC(capexTotal);
+    document.getElementById('roiPayback').textContent=payback===Infinity||lucroLiq<=0?'∞':'~'+payback.toFixed(1)+'m';
+    document.getElementById('roiMensal').textContent=roiM.toFixed(1)+'%';
+    document.getElementById('roiAnual').textContent=roiA.toFixed(0)+'%';
+    document.getElementById('roiPaybackHeader').textContent=payback===Infinity||lucroLiq<=0?'∞':'~'+payback.toFixed(1)+'m';
+    document.getElementById('roiMensalHeader').textContent=roiM.toFixed(1)+'%/mês';
+    document.getElementById('progressLabel').textContent=roiM.toFixed(1)+'% / mês';
+    const pf=document.getElementById('progressFill');
+    pf.style.width=Math.min(roiM,100)+'%';
+    pf.style.background=roiM>=15?'var(--green)':roiM>=8?'var(--gold)':'var(--red)';
+    // EXPANSÃO MULTI-KIOSKS
+    let nk=parseInt(document.getElementById('numKiosks').value)||2;
+    if(nk<2)nk=2;if(nk>50)nk=50;
+    const expS=document.getElementById('expansionSection');
+    if(nk>=2){
+      expS.style.display='block';
+      const eFat=recBruta*nk,eFatAnual=eFat*12,eCV=cvMes*nk;
+      const eCFk=(alg+eng)*nk,eCFc=sis+con+trf+agn,eCF=eCFk+eCFc;
+      const eEq=custoEq*nk,eCapex=capexTotal*nk,eDep=dep*nk,eJuros=juros*nk;
+      const eSimp=calcSimples(eFatAnual),eImp=eFat*eSimp.aliquota;
+      const eEbitda=eFat-eCV-eCF-eEq-eImp,eLucro=eEbitda-eDep-eJuros;
+      const eM=eFat>0?(eLucro/eFat)*100:0;
+      const ePb=eLucro>0?eCapex/eLucro:Infinity;
+      const eRoi=eCapex>0?((eLucro/eCapex)*100)*12:0;
+      const eL=eLucro>0;
+      document.getElementById('expansionDRE').innerHTML='<div style="display:flex;flex-direction:column;gap:2px;"><div class="dre-row"><span style="font-weight:700;">Faturamento Total ('+nk+' kiosks)</span><span style="font-weight:700;">'+formatC(eFat)+'</span></div><div class="dre-row red"><span>(-) Custos Variáveis</span><span>- '+formatC(eCV)+'</span></div><div class="dre-row red"><span>(-) Custos Fixos</span><span>- '+formatC(eCF)+'</span></div><div class="dre-row red"><span>(-) Equipe ('+funcionarios.length*nk+' func.)</span><span>- '+formatC(eEq)+'</span></div><div class="dre-row red"><span>(-) Impostos ('+(eSimp.aliquota*100).toFixed(1)+'%)</span><span>- '+formatC(eImp)+'</span></div><div class="dre-row dre-highlight" style="background:var(--gold-soft);"><span style="font-weight:800;color:var(--gold);">EBITDA</span><span style="font-weight:800;color:var(--gold);">'+formatC(eEbitda)+'</span></div><div class="dre-row red" style="font-size:12px;padding-left:16px;"><span>(-) D&A + Juros</span><span>- '+formatC(eDep+eJuros)+'</span></div><div class="dre-row dre-highlight" style="background:'+(eL?'var(--green-soft)':'var(--red-soft)')+';"><span style="font-weight:800;color:'+(eL?'var(--green)':'var(--red)')+';">LUCRO LÍQUIDO</span><span style="font-weight:800;color:'+(eL?'var(--green)':'var(--red)')+';">'+formatC(eLucro)+' ('+eM.toFixed(1)+'%)</span></div></div><div class="roi-grid" style="margin-top:16px;"><div class="roi-card roi-card-accent" style="border-color:rgba(201,151,59,0.3);background:var(--gold-soft);"><div class="result-label" style="color:var(--gold);">CAPEX Total</div><div class="result-value" style="font-size:18px;color:var(--gold);">'+formatC(eCapex)+'</div></div><div class="roi-card roi-card-accent" style="border-color:rgba(59,139,246,0.3);background:var(--blue-soft);"><div class="result-label" style="color:var(--blue);">Payback</div><div class="result-value" style="font-size:18px;color:var(--blue);">'+(ePb===Infinity||eLucro<=0?'∞':'~'+ePb.toFixed(1)+' meses')+'</div></div><div class="roi-card" style="grid-column:span 2;"><div class="func-stat-label">ROI Anual</div><div class="func-stat-value" style="font-size:22px;">'+eRoi.toFixed(0)+'%</div></div></div>';
+      // CAIXA VS SÓCIOS
+      const pcx=Math.min(100,Math.max(0,parseFloat(document.getElementById('pctCaixa').value)||0));
+      const pso=100-pcx,vCx=eLucro*(pcx/100),vSo=eLucro*(pso/100);
+      document.getElementById('pctSocios').textContent='('+pso.toFixed(0)+'%)';
+      document.getElementById('valorCaixa').textContent=formatC(vCx);
+      document.getElementById('valorSocios').textContent=formatC(vSo);
+      const pMe=Math.min(100,Math.max(0,parseFloat(document.getElementById('pctMelo').value)||0));
+      const pLe=(100-pMe)/2,pIc=(100-pMe)/2;
+      document.getElementById('pctLeo').textContent='('+pLe.toFixed(0)+'%)';
+      document.getElementById('pctIcaro').textContent='('+pIc.toFixed(0)+'%)';
+      document.getElementById('valorMelo').textContent=formatC(vSo*(pMe/100));
+      document.getElementById('valorLeo').textContent=formatC(vSo*(pLe/100));
+      document.getElementById('valorIcaro').textContent=formatC(vSo*(pIc/100));
+    }else{expS.style.display='none';}
+  }
+  document.addEventListener('DOMContentLoaded',function(){renderFuncionarios();calcular();});
+</script>
+</body>
+</html>
