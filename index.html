@@ -208,7 +208,7 @@
           <div class="dre-row red"><span>(-) Custos Variáveis</span><span id="dreCustosVar"></span></div>
           <div class="dre-row"><span style="font-weight:700;">Margem Contribuição</span><span style="font-weight:700;" id="dreMargem"></span></div>
           <div class="dre-row red"><span>(-) Custos Fixos</span><span id="dreCustosFixos"></span></div>
-          <div class="dre-row red"><span>(-) Equipe</span><span id="dreEquipe"></span></div>
+          <div class="dre-row red"><span>(-) Salários Fixos</span><span id="dreEquipe"></span></div>
           <div class="dre-row dre-highlight" style="background:var(--gold-soft);"><span style="font-weight:800;color:var(--gold);">EBITDA</span><span style="font-weight:800;color:var(--gold);" id="dreEbitda"></span></div>
           <div class="dre-row red" style="font-size:12px;padding-left:16px;"><span>(-) D&A + Juros</span><span id="dreDA"></span></div>
           <div class="dre-row dre-highlight" id="dreLucroRow" style="background:var(--green-soft);"><span style="font-weight:800;" id="dreLucroLabel">LUCRO LÍQUIDO</span><span style="font-weight:800;" id="dreLucroValor"></span></div>
@@ -270,7 +270,7 @@
   }
   let funcionarios=[{id:1,salarioFixo:1500},{id:2,salarioFixo:1500}];
   let nextFuncId=3;
-  function addFuncionario(){funcionarios.push({id:nextFuncId,salarioFixo:2000});nextFuncId++;renderFuncionarios();calcular();}
+  function addFuncionario(){funcionarios.push({id:nextFuncId,salarioFixo:1500});nextFuncId++;renderFuncionarios();calcular();}
   function removeFuncionario(id){if(funcionarios.length<=1)return;funcionarios=funcionarios.filter(f=>f.id!==id);renderFuncionarios();calcular();}
   function updateSalario(id,v){const f=funcionarios.find(x=>x.id===id);if(f){f.salarioFixo=parseFloat(v)||0;atualizarStats();calcular();}}
   function calcEquipe(){
@@ -327,15 +327,19 @@
     const capexEst=est*cc,capexTotal=cxm+cxe+capexEst+cxc;
     const dep=(cxm/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
     const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
+    const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
     const cvUnit=cc+ct+cm+ce,cvMes=capasMes*cvUnit;
-    const mc=recLiq-cvMes;
+    const comissaoTotalMes=capasMes*cu;
+    const cvTotal=cvMes+comissaoTotalMes;
+    const mc=recLiq-cvTotal;
     const cfPorKiosk=alg+eng,cfCompart=sis+con+trf+agn,cfTotal1=cfPorKiosk+cfCompart;
+    const salarioFixoTotal=funcionarios.reduce((s,f)=>s+f.salarioFixo,0);
     const eq=calcEquipe(),custoEq=eq.total;
     atualizarStats();
-    const ebitda=mc-cfTotal1-custoEq,lucroLiq=ebitda-dep-juros;
+    const ebitda=mc-cfTotal1-salarioFixoTotal,lucroLiq=ebitda-dep-juros;
     const mEbitda=recBruta>0?(ebitda/recBruta)*100:0,mLiq=recBruta>0?(lucroLiq/recBruta)*100:0;
-    const mcUnit=pv>0?pv-cvUnit-(pv*simp.aliquota):0;
-    const cfTotaisFixos=cfTotal1+custoEq+dep+juros;
+    const mcUnit=pv>0?pv-cvUnit-cu-(pv*simp.aliquota):0;
+    const cfTotaisFixos=cfTotal1+salarioFixoTotal+dep+juros;
     const beCapas=mcUnit>0?Math.ceil(cfTotaisFixos/mcUnit):0,beDia=Math.ceil(beCapas/30),beFat=beCapas*pv;
     const payback=lucroLiq>0?capexTotal/lucroLiq:Infinity;
     const roiM=capexTotal>0?(lucroLiq/capexTotal)*100:0,roiA=roiM*12;
@@ -348,7 +352,6 @@
     document.getElementById('capexHeaderTotal').textContent=formatC(capexTotal);
     document.getElementById('depreciacaoMes').textContent=formatC(dep);
     document.getElementById('jurosMes').textContent=formatC(juros);
-    const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
     document.getElementById('resumoComissaoUnit').textContent=formatCD(cu);
     document.getElementById('resumoVendasFunc').textContent=eq.vpf+' capas';
     document.getElementById('resumoComissaoFunc').textContent=formatC(eq.vpf*cu);
@@ -376,10 +379,10 @@
     document.getElementById('dreReceita').textContent=formatC(recBruta);
     document.getElementById('dreImpostosLabel').textContent='(-) Impostos ('+(simp.aliquota*100).toFixed(1)+'%)';
     document.getElementById('dreImpostos').textContent='- '+formatC(impostos);
-    document.getElementById('dreCustosVar').textContent='- '+formatC(cvMes);
+    document.getElementById('dreCustosVar').textContent='- '+formatC(cvTotal);
     document.getElementById('dreMargem').textContent=formatC(mc);
     document.getElementById('dreCustosFixos').textContent='- '+formatC(cfTotal1);
-    document.getElementById('dreEquipe').textContent='- '+formatC(custoEq);
+    document.getElementById('dreEquipe').textContent='- '+formatC(salarioFixoTotal);
     document.getElementById('dreEbitda').textContent=formatC(ebitda);
     document.getElementById('dreDA').textContent='- '+formatC(dep+juros);
     document.getElementById('dreLucroValor').textContent=formatC(lucroLiq)+' ('+mLiq.toFixed(1)+'%)';
@@ -402,16 +405,16 @@
     const expS=document.getElementById('expansionSection');
     if(nk>=2){
       expS.style.display='block';
-      const eFat=recBruta*nk,eFatAnual=eFat*12,eCV=cvMes*nk;
+      const eFat=recBruta*nk,eFatAnual=eFat*12,eCV=cvTotal*nk;
       const eCFk=(alg+eng)*nk,eCFc=sis+con+trf+agn,eCF=eCFk+eCFc;
-      const eEq=custoEq*nk,eCapex=capexTotal*nk,eDep=dep*nk,eJuros=juros*nk;
+      const eEq=salarioFixoTotal*nk,eCapex=capexTotal*nk,eDep=dep*nk,eJuros=juros*nk;
       const eSimp=calcSimples(eFatAnual),eImp=eFat*eSimp.aliquota;
       const eEbitda=eFat-eCV-eCF-eEq-eImp,eLucro=eEbitda-eDep-eJuros;
       const eM=eFat>0?(eLucro/eFat)*100:0;
       const ePb=eLucro>0?eCapex/eLucro:Infinity;
       const eRoi=eCapex>0?((eLucro/eCapex)*100)*12:0;
       const eL=eLucro>0;
-      document.getElementById('expansionDRE').innerHTML='<div style="display:flex;flex-direction:column;gap:2px;"><div class="dre-row"><span style="font-weight:700;">Faturamento Total ('+nk+' kiosks)</span><span style="font-weight:700;">'+formatC(eFat)+'</span></div><div class="dre-row red"><span>(-) Custos Variáveis</span><span>- '+formatC(eCV)+'</span></div><div class="dre-row red"><span>(-) Custos Fixos</span><span>- '+formatC(eCF)+'</span></div><div class="dre-row red"><span>(-) Equipe ('+funcionarios.length*nk+' func.)</span><span>- '+formatC(eEq)+'</span></div><div class="dre-row red"><span>(-) Impostos ('+(eSimp.aliquota*100).toFixed(1)+'%)</span><span>- '+formatC(eImp)+'</span></div><div class="dre-row dre-highlight" style="background:var(--gold-soft);"><span style="font-weight:800;color:var(--gold);">EBITDA</span><span style="font-weight:800;color:var(--gold);">'+formatC(eEbitda)+'</span></div><div class="dre-row red" style="font-size:12px;padding-left:16px;"><span>(-) D&A + Juros</span><span>- '+formatC(eDep+eJuros)+'</span></div><div class="dre-row dre-highlight" style="background:'+(eL?'var(--green-soft)':'var(--red-soft)')+';"><span style="font-weight:800;color:'+(eL?'var(--green)':'var(--red)')+';">LUCRO LÍQUIDO</span><span style="font-weight:800;color:'+(eL?'var(--green)':'var(--red)')+';">'+formatC(eLucro)+' ('+eM.toFixed(1)+'%)</span></div></div><div class="roi-grid" style="margin-top:16px;"><div class="roi-card roi-card-accent" style="border-color:rgba(201,151,59,0.3);background:var(--gold-soft);"><div class="result-label" style="color:var(--gold);">CAPEX Total</div><div class="result-value" style="font-size:18px;color:var(--gold);">'+formatC(eCapex)+'</div></div><div class="roi-card roi-card-accent" style="border-color:rgba(59,139,246,0.3);background:var(--blue-soft);"><div class="result-label" style="color:var(--blue);">Payback</div><div class="result-value" style="font-size:18px;color:var(--blue);">'+(ePb===Infinity||eLucro<=0?'∞':'~'+ePb.toFixed(1)+' meses')+'</div></div><div class="roi-card" style="grid-column:span 2;"><div class="func-stat-label">ROI Anual</div><div class="func-stat-value" style="font-size:22px;">'+eRoi.toFixed(0)+'%</div></div></div>';
+      document.getElementById('expansionDRE').innerHTML='<div style="display:flex;flex-direction:column;gap:2px;"><div class="dre-row"><span style="font-weight:700;">Faturamento Total ('+nk+' kiosks)</span><span style="font-weight:700;">'+formatC(eFat)+'</span></div><div class="dre-row red"><span>(-) Custos Variáveis</span><span>- '+formatC(eCV)+'</span></div><div class="dre-row red"><span>(-) Custos Fixos</span><span>- '+formatC(eCF)+'</span></div><div class="dre-row red"><span>(-) Salários Fixos ('+funcionarios.length*nk+' func.)</span><span>- '+formatC(eEq)+'</span></div><div class="dre-row red"><span>(-) Impostos ('+(eSimp.aliquota*100).toFixed(1)+'%)</span><span>- '+formatC(eImp)+'</span></div><div class="dre-row dre-highlight" style="background:var(--gold-soft);"><span style="font-weight:800;color:var(--gold);">EBITDA</span><span style="font-weight:800;color:var(--gold);">'+formatC(eEbitda)+'</span></div><div class="dre-row red" style="font-size:12px;padding-left:16px;"><span>(-) D&A + Juros</span><span>- '+formatC(eDep+eJuros)+'</span></div><div class="dre-row dre-highlight" style="background:'+(eL?'var(--green-soft)':'var(--red-soft)')+';"><span style="font-weight:800;color:'+(eL?'var(--green)':'var(--red)')+';">LUCRO LÍQUIDO</span><span style="font-weight:800;color:'+(eL?'var(--green)':'var(--red)')+';">'+formatC(eLucro)+' ('+eM.toFixed(1)+'%)</span></div></div><div class="roi-grid" style="margin-top:16px;"><div class="roi-card roi-card-accent" style="border-color:rgba(201,151,59,0.3);background:var(--gold-soft);"><div class="result-label" style="color:var(--gold);">CAPEX Total</div><div class="result-value" style="font-size:18px;color:var(--gold);">'+formatC(eCapex)+'</div></div><div class="roi-card roi-card-accent" style="border-color:rgba(59,139,246,0.3);background:var(--blue-soft);"><div class="result-label" style="color:var(--blue);">Payback</div><div class="result-value" style="font-size:18px;color:var(--blue);">'+(ePb===Infinity||eLucro<=0?'∞':'~'+ePb.toFixed(1)+' meses')+'</div></div><div class="roi-card" style="grid-column:span 2;"><div class="func-stat-label">ROI Anual</div><div class="func-stat-value" style="font-size:22px;">'+eRoi.toFixed(0)+'%</div></div></div>';
       // CAIXA VS SÓCIOS
       const pcx=Math.min(100,Math.max(0,parseFloat(document.getElementById('pctCaixa').value)||0));
       const pso=100-pcx,vCx=eLucro*(pcx/100),vSo=eLucro*(pso/100);
