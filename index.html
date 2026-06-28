@@ -121,15 +121,15 @@
       <div class="card">
         <div class="card-header"><div class="card-icon" style="background:var(--green-soft);">💰</div><div><div class="card-title">Vendas & Produto</div><div class="card-subtitle">Configure preço e volume</div></div></div>
         <div class="grid-2">
-          <div class="input-group"><div class="input-label">🏷️ Preço de Venda</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="precoVenda" value="129" step="1" min="0" oninput="calcular()"></div></div>
-          <div class="input-group"><div class="input-label">📦 Capas / Dia</div><div class="input-wrap has-suffix"><input type="number" id="capasPerDay" value="25" step="1" min="0" oninput="calcular()"><span class="input-suffix">/dia</span></div></div>
+          <div class="input-group"><div class="input-label">🏷️ Preço de Venda</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="precoVenda" value="99" step="1" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">📦 Capas / Dia</div><div class="input-wrap has-suffix"><input type="number" id="capasPerDay" value="20" step="1" min="0" oninput="calcular()"><span class="input-suffix">/dia</span></div></div>
         </div>
         <div class="func-stats" style="margin-top:14px;"><div class="func-stat"><div class="func-stat-label">Vendas / Mês</div><div class="func-stat-value" id="vendasMes">750</div></div><div class="func-stat"><div class="func-stat-label">Faturamento Bruto</div><div class="func-stat-value" id="faturamentoBruto" style="color:var(--green);">R$ 96.750</div></div></div>
       </div>
       <!-- Equipe -->
       <div class="card">
         <div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">👥</div><div><div class="card-title">Equipe & Comissão</div><div class="card-subtitle">Salário fixo + comissão por unidade vendida</div></div></div>
-        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-prefix has-suffix"><span class="input-prefix">R$</span><input type="number" id="comissaoUnitaria" value="3.00" step="0.50" min="0" oninput="calcular()"><span class="input-suffix">/un</span></div></div>
+        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-prefix has-suffix"><span class="input-prefix">R$</span><input type="number" id="comissaoUnitaria" value="5.00" step="0.50" min="0" oninput="calcular()"><span class="input-suffix">/un</span></div></div>
         <div id="funcContainer"></div>
         <button class="btn-add-func" onclick="addFuncionario()">+ Adicionar Funcionário</button>
         <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
@@ -141,7 +141,7 @@
           <div class="input-group"><div class="input-label">📱 Capinha</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoCapinha" value="16.71" step="0.01" min="0" oninput="calcular()"></div></div>
           <div class="input-group"><div class="input-label">🎨 Tinta</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoTinta" value="0.45" step="0.01" min="0" oninput="calcular()"></div></div>
           <div class="input-group"><div class="input-label">🔧 Manutenção</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoManutencao" value="1.50" step="0.01" min="0" oninput="calcular()"></div></div>
-          <div class="input-group"><div class="input-label">🛍️ Embalagem</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoEmbalagem" value="3.00" step="0.01" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">🛍️ Embalagem</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoEmbalagem" value="7.45" step="0.01" min="0" oninput="calcular()"></div></div>
         </div></div></div>
       </div>
       <!-- Custos Fixos Colapsável -->
@@ -150,15 +150,15 @@
         <div class="collapsible-body" id="cfBody"><div class="collapsible-body-inner">
           <div class="section-label">Estrutura (multiplicam por kiosk)</div>
           <div class="grid-2">
-            <div class="input-group"><div class="input-label">🏬 Aluguel</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="aluguel" value="12000" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">🏬 Aluguel</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="aluguel" value="8000" step="100" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">⚡ Energia+Internet</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="energia" value="600" step="50" min="0" oninput="calcular()"></div></div>
           </div>
           <div class="section-label">Compartilhados (não multiplicam)</div>
           <div class="grid-2">
-            <div class="input-group"><div class="input-label">💻 Sistema</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="sistema" value="400" step="50" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">💻 Sistema</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="sistema" value="100" step="50" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">📋 Contabilidade</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="contabilidade" value="600" step="50" min="0" oninput="calcular()"></div></div>
-            <div class="input-group"><div class="input-label">📱 Tráfego</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="trafego" value="3000" step="100" min="0" oninput="calcular()"></div></div>
-            <div class="input-group"><div class="input-label">🎬 Agência</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="agencia" value="3000" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">📱 Tráfego</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="trafego" value="2500" step="100" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">🎬 Agência</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="agencia" value="2500" step="100" min="0" oninput="calcular()"></div></div>
           </div>
         </div></div>
       </div>
@@ -268,7 +268,7 @@
     b.classList.toggle('open');h.classList.toggle('open');
     a.textContent=b.classList.contains('open')?'▼':'▶';
   }
-  let funcionarios=[{id:1,salarioFixo:2000},{id:2,salarioFixo:2000}];
+  let funcionarios=[{id:1,salarioFixo:1500},{id:2,salarioFixo:1500}];
   let nextFuncId=3;
   function addFuncionario(){funcionarios.push({id:nextFuncId,salarioFixo:2000});nextFuncId++;renderFuncionarios();calcular();}
   function removeFuncionario(id){if(funcionarios.length<=1)return;funcionarios=funcionarios.filter(f=>f.id!==id);renderFuncionarios();calcular();}
