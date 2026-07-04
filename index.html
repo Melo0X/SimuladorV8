@@ -259,12 +259,12 @@
   function calcSimples(fa){
     let n,d,f;
     if(fa<=180000){n=0.04;d=0;f='Até R$ 180k';}
-    else if(fa<=360000){n=0.055;d=2700;f='R$ 180k – R$ 360k';}
-    else if(fa<=720000){n=0.076;d=10260;f='R$ 360k – R$ 720k';}
-    else if(fa<=1800000){n=0.082;d=14580;f='R$ 720k – R$ 1.8M';}
-    else if(fa<=3600000){n=0.095;d=37980;f='R$ 1.8M – R$ 3.6M';}
-    else if(fa<=4800000){n=0.11;d=91980;f='R$ 3.6M – R$ 4.8M';}
-    else{n=0.11;d=91980;f='Acima R$ 4.8M';}
+    else if(fa<=360000){n=0.073;d=5940;f='R$ 180k – R$ 360k';}
+    else if(fa<=720000){n=0.095;d=13860;f='R$ 360k – R$ 720k';}
+    else if(fa<=1800000){n=0.107;d=22500;f='R$ 720k – R$ 1.8M';}
+    else if(fa<=3600000){n=0.143;d=87300;f='R$ 1.8M – R$ 3.6M';}
+    else if(fa<=4800000){n=0.19;d=378000;f='R$ 3.6M – R$ 4.8M';}
+    else{n=0.19;d=378000;f='Acima R$ 4.8M';}
     const ef=fa>0?((fa*n)-d)/fa:0;
     return{aliquota:Math.max(ef,0),faixa:f+' anual'};
   }
@@ -281,11 +281,17 @@
   function calcEquipe(){
     const cpd=parseFloat(document.getElementById('capasPerDay').value)||0;
     const pv=parseFloat(document.getElementById('precoVenda').value)||0;
-    const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;const cu=pv*(comissaoPctVal/100);
+    const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;
+    const parcPct=parseFloat(document.getElementById('parcVendasPct').value)||0;
+    const descPct=parseFloat(document.getElementById('descontoPct').value)||0;
+    const pvComDesc=pv*(1-descPct/100);
+    const cuNormal=pv*(comissaoPctVal/100);
+    const cuParc=pvComDesc*(comissaoPctVal/100);
+    const cuBlended=cuNormal*((100-parcPct)/100)+cuParc*(parcPct/100);
     const cm=cpd*30,n=funcionarios.length,vpf=n>0?Math.floor(cm/n):0;
     let total=0;
-    const dados=funcionarios.map((f,i)=>{const com=vpf*cu,st=f.salarioFixo+com;total+=st;return{id:f.id,nome:'Funcionário '+(i+1),sf:f.salarioFixo,vpf,com,st};});
-    return{dados,total,vpf,comTotal:n>0?vpf*cu*n:0};
+    const dados=funcionarios.map((f,i)=>{const com=vpf*cuBlended,st=f.salarioFixo+com;total+=st;return{id:f.id,nome:'Funcionário '+(i+1),sf:f.salarioFixo,vpf,com,st};});
+    return{dados,total,vpf,comTotal:n>0?vpf*cuBlended*n:0};
   }
   function atualizarStats(){
     const eq=calcEquipe();
@@ -348,11 +354,16 @@
     const recBruta=capasMes*pv-perdaDesconto;
     const fatAnual=recBruta*12;
     const capexEst=est*cc,capexTotal=cxm+cxe+cxc+cxti+cxo;
-    const dep=(cxm/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
+    const depBaseImport=Math.max(0,cxm-capexEst);
+    const dep=(depBaseImport/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
     const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
-    const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;const cu=pv*(comissaoPctVal/100);
+    const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;
+    const cuNormal=pv*(comissaoPctVal/100);
+    const cuParc=pvComDesc*(comissaoPctVal/100);
     const cvUnit=cc+ct+cm+ce,cvMes=capasMes*cvUnit;
-    const comissaoTotalMes=capasMes*cu;
+    const capasMesNormal=capasMes-capasParc;
+    const comissaoTotalMes=capasMesNormal*cuNormal+capasParc*cuParc;
+    const cuBlended=capasMes>0?comissaoTotalMes/capasMes:cuNormal;
     const cvTotal=cvMes+comissaoTotalMes+comissaoParcMes;
     const mc=recLiq-cvTotal;
     const cfPorKiosk=alg+eng,cfCompart=sis+con+trf+agn,cfTotal1=cfPorKiosk+cfCompart;
@@ -362,8 +373,8 @@
     const ebitda=mc-cfTotal1-salarioFixoTotal,lucroLiq=ebitda-dep-juros;
     const mEbitda=recBruta>0?(ebitda/recBruta)*100:0,mLiq=recBruta>0?(lucroLiq/recBruta)*100:0;
     // Break-even com blended MCu (mix normal + parceiro)
-    const mcUnit_normal=pv-cvUnit-cu-(pv*simp.aliquota);
-    const mcUnit_parc=pvComDesc-cvUnit-cu-(pvComDesc*simp.aliquota)-(pvComDesc*(comParcPct/100));
+    const mcUnit_normal=pv-cvUnit-cuNormal-(pv*simp.aliquota);
+    const mcUnit_parc=pvComDesc-cvUnit-cuParc-(pvComDesc*simp.aliquota)-(pvComDesc*(comParcPct/100));
     const wNormal=(100-parcPct)/100,wParc=parcPct/100;
     const mcUnit=mcUnit_normal*wNormal+mcUnit_parc*wParc;
     const cfTotaisFixos=cfTotal1+salarioFixoTotal+dep+juros;
@@ -379,9 +390,9 @@
     document.getElementById('capexHeaderTotal').textContent=formatC(capexTotal);
     document.getElementById('depreciacaoMes').textContent=formatC(dep);
     document.getElementById('jurosMes').textContent=formatC(juros);
-    document.getElementById('resumoComissaoUnit').textContent=formatCD(cu);
+    document.getElementById('resumoComissaoUnit').textContent=formatCD(cuBlended);
     document.getElementById('resumoVendasFunc').textContent=eq.vpf+' capas';
-    document.getElementById('resumoComissaoFunc').textContent=formatC(eq.vpf*cu);
+    document.getElementById('resumoComissaoFunc').textContent=formatC(eq.vpf*cuBlended);
     document.getElementById('resumoComissaoTotal').textContent=formatC(eq.comTotal);
     document.getElementById('beCapas').textContent=beCapas;
     document.getElementById('beDia').textContent='~'+beDia;
