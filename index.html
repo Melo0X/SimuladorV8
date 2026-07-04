@@ -347,7 +347,7 @@
     // Receita já líquida de descontos
     const recBruta=capasMes*pv-perdaDesconto;
     const fatAnual=recBruta*12;
-    const capexEst=est*cc,capexTotal=cxm+cxe+capexEst+cxc+cxti+cxo;
+    const capexEst=est*cc,capexTotal=cxm+cxe+cxc+cxti+cxo;
     const dep=(cxm/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
     const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
     const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;const cu=pv*(comissaoPctVal/100);
