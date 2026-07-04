@@ -157,6 +157,15 @@
           <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
         </div></div>
       </div>
+      <!-- Resumo Comissão Colapsável -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('comis')"><div class="ch-left"><span style="font-size:16px;">📈</span><span class="ch-title">Resumo da Comissão</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="resumoComissaoTotal" style="color:var(--gold);">R$ 2.250</span><span class="ch-arrow" id="comisArrow">▶</span></div></div>
+        <div class="collapsible-body" id="comisBody"><div class="collapsible-body-inner"><div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão / case</span><span style="font-size:14px;font-weight:700;color:var(--gold);" id="resumoComissaoUnit">R$ 3,00</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Vendas / funcionário</span><span style="font-size:14px;font-weight:700;" id="resumoVendasFunc">375</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão / funcionário</span><span style="font-size:14px;font-weight:700;color:var(--green);" id="resumoComissaoFunc">R$ 1.125</span></div>
+        </div></div></div>
+      </div>
       <!-- Custos Variáveis Colapsável -->
       <div>
         <div class="collapsible-header" onclick="toggleCollapse('cv')"><div class="ch-left"><span style="font-size:16px;">📊</span><span class="ch-title">Custos Variáveis</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="cvTotal" style="color:var(--orange);">R$ 21,66/un</span><span class="ch-arrow" id="cvArrow">▶</span></div></div>
@@ -207,15 +216,6 @@
           </div>
           <div style="display:flex;gap:10px;margin-top:14px;"><div class="func-stat" style="flex:1;"><div class="func-stat-label">Depreciação/mês</div><div class="func-stat-value" id="depreciacaoMes">R$ 1.846</div></div><div class="func-stat" style="flex:1;"><div class="func-stat-label">Juros/mês</div><div class="func-stat-value" id="jurosMes">R$ 622</div></div></div>
         </div></div>
-      </div>
-      <!-- Resumo Comissão Colapsável -->
-      <div>
-        <div class="collapsible-header" onclick="toggleCollapse('comis')"><div class="ch-left"><span style="font-size:16px;">📈</span><span class="ch-title">Resumo da Comissão</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="resumoComissaoTotal" style="color:var(--gold);">R$ 2.250</span><span class="ch-arrow" id="comisArrow">▶</span></div></div>
-        <div class="collapsible-body" id="comisBody"><div class="collapsible-body-inner"><div style="display:flex;flex-direction:column;gap:8px;">
-          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão / case</span><span style="font-size:14px;font-weight:700;color:var(--gold);" id="resumoComissaoUnit">R$ 3,00</span></div>
-          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Vendas / funcionário</span><span style="font-size:14px;font-weight:700;" id="resumoVendasFunc">375</span></div>
-          <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão / funcionário</span><span style="font-size:14px;font-weight:700;color:var(--green);" id="resumoComissaoFunc">R$ 1.125</span></div>
-        </div></div></div>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:20px;">
