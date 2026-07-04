@@ -150,7 +150,7 @@
       <!-- Equipe -->
       <div class="card">
         <div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">👥</div><div><div class="card-title">Equipe & Comissão</div><div class="card-subtitle">Salário fixo + comissão por unidade vendida</div></div></div>
-        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-prefix has-suffix"><span class="input-prefix">R$</span><input type="number" id="comissaoUnitaria" value="5.00" step="0.50" min="0" oninput="calcular()"><span class="input-suffix">/un</span></div></div>
+        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-suffix"><input type="number" id="comissaoPct" value="5" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
         <div id="funcContainer"></div>
         <button class="btn-add-func" onclick="addFuncionario()">+ Adicionar Funcionário</button>
         <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
@@ -276,7 +276,8 @@
   function updateSalario(id,v){const f=funcionarios.find(x=>x.id===id);if(f){f.salarioFixo=parseFloat(v)||0;atualizarStats();calcular();}}
   function calcEquipe(){
     const cpd=parseFloat(document.getElementById('capasPerDay').value)||0;
-    const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
+    const pv=parseFloat(document.getElementById('precoVenda').value)||0;
+    const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;const cu=pv*(comissaoPctVal/100);
     const cm=cpd*30,n=funcionarios.length,vpf=n>0?Math.floor(cm/n):0;
     let total=0;
     const dados=funcionarios.map((f,i)=>{const com=vpf*cu,st=f.salarioFixo+com;total+=st;return{id:f.id,nome:'Funcionário '+(i+1),sf:f.salarioFixo,vpf,com,st};});
@@ -341,7 +342,7 @@
     const capexEst=est*cc,capexTotal=cxm+cxe+capexEst+cxc;
     const dep=(cxm/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
     const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
-    const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
+    const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;const cu=pv*(comissaoPctVal/100);
     const cvUnit=cc+ct+cm+ce,cvMes=capasMes*cvUnit;
     const comissaoTotalMes=capasMes*cu;
     const cvTotal=cvMes+comissaoTotalMes+comissaoParcMes;
