@@ -148,12 +148,14 @@
       </div>
 
       <!-- Equipe -->
-      <div class="card">
-        <div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">👥</div><div><div class="card-title">Equipe & Comissão</div><div class="card-subtitle">Salário fixo + comissão por unidade vendida</div></div></div>
-        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-suffix"><input type="number" id="comissaoPct" value="3" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
-        <div id="funcContainer"></div>
-        <button class="btn-add-func" onclick="addFuncionario()">+ Adicionar Funcionário</button>
-        <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('equipe')"><div class="ch-left"><span style="font-size:16px;">👥</span><span class="ch-title">Equipe & Comissão</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="equipeHeaderTotal" style="color:var(--purple);">R$ 0</span><span class="ch-arrow" id="equipeArrow">▶</span></div></div>
+        <div class="collapsible-body" id="equipeBody"><div class="collapsible-body-inner">
+          <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-suffix"><input type="number" id="comissaoPct" value="3" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+          <div id="funcContainer"></div>
+          <button class="btn-add-func" onclick="addFuncionario()">+ Adicionar Funcionário</button>
+          <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
+        </div></div>
       </div>
       <!-- Custos Variáveis Colapsável -->
       <div>
@@ -292,11 +294,13 @@
       const nm=document.getElementById('func-nome-'+d.id);if(nm)nm.textContent='👤 '+d.nome;
     });
     document.getElementById('custoEquipeValor').textContent=formatC(eq.total);
+    document.getElementById('equipeHeaderTotal').textContent=formatC(eq.total);
   }
   function renderFuncionarios(){
     const c=document.getElementById('funcContainer'),eq=calcEquipe();
     c.innerHTML=eq.dados.map(d=>'<div class="func-card"><div class="func-header"><div class="func-name" id="func-nome-'+d.id+'">👤 '+d.nome+'</div>'+(funcionarios.length>1?'<button class="func-remove" onclick="removeFuncionario('+d.id+')">×</button>':'')+'</div><div class="input-group"><div class="input-label">💵 Salário Fixo</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="func-salario-'+d.id+'" value="'+d.sf+'" step="100" min="0" oninput="updateSalario('+d.id+',this.value)"></div></div><div class="func-stats" id="func-stats-'+d.id+'" style="grid-template-columns:1fr 1fr;"><div class="func-stat"><div class="func-stat-label">Vendas Atrib.</div><div class="func-stat-value">'+d.vpf+' capas</div></div><div class="func-stat"><div class="func-stat-label">Comissão</div><div class="func-stat-value" style="color:var(--green);">+ '+formatC(d.com)+'</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:8px 10px;background:var(--bg-card);border-radius:8px;"><span style="font-size:11px;color:var(--text-muted);font-weight:600;">SALÁRIO TOTAL</span><span style="font-size:15px;font-weight:800;" id="func-total-'+d.id+'">'+formatC(d.st)+'</span></div></div>').join('');
     document.getElementById('custoEquipeValor').textContent=formatC(eq.total);
+    document.getElementById('equipeHeaderTotal').textContent=formatC(eq.total);
   }
   function updateMeta(cpd){
     ['metaSobrevivencia','metaBase','metaMeta','metaStretch'].forEach(id=>document.getElementById(id).classList.remove('active'));
