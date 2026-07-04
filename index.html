@@ -121,11 +121,32 @@
       <div class="card">
         <div class="card-header"><div class="card-icon" style="background:var(--green-soft);">💰</div><div><div class="card-title">Vendas & Produto</div><div class="card-subtitle">Configure preço e volume</div></div></div>
         <div class="grid-2">
-          <div class="input-group"><div class="input-label">🏷️ Preço de Venda</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="precoVenda" value="120" step="1" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">🏷️ Preço de Venda</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="precoVenda" value="149" step="1" min="0" oninput="calcular()"></div></div>
           <div class="input-group"><div class="input-label">📦 Capas / Dia</div><div class="input-wrap has-suffix"><input type="number" id="capasPerDay" value="20" step="1" min="0" oninput="calcular()"><span class="input-suffix">/dia</span></div></div>
         </div>
         <div class="func-stats" style="margin-top:14px;"><div class="func-stat"><div class="func-stat-label">Vendas / Mês</div><div class="func-stat-value" id="vendasMes">750</div></div><div class="func-stat"><div class="func-stat-label">Faturamento Bruto</div><div class="func-stat-value" id="faturamentoBruto" style="color:var(--green);">R$ 96.750</div></div></div>
       </div>
+      <!-- Plano Embaixador -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('emb')"><div class="ch-left"><span style="font-size:16px;">🤝</span><span class="ch-title">Plano Embaixador</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="embImpactoHeader" style="color:var(--orange);">R$ 0 impacto</span><span class="ch-arrow" id="embArrow">▶</span></div></div>
+        <div class="collapsible-body" id="embBody"><div class="collapsible-body-inner">
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">👥 Nº de Parceiros</div><div class="input-wrap has-suffix"><input type="number" id="numParceiros" value="10" step="1" min="0" oninput="calcular()"><span class="input-suffix">part.</span></div></div>
+            <div class="input-group"><div class="input-label">📊 Vendas via Parceiro</div><div class="input-wrap has-suffix"><input type="number" id="parcVendasPct" value="20" step="1" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+            <div class="input-group"><div class="input-label">🎁 Desconto p/ Cliente</div><div class="input-wrap has-suffix"><input type="number" id="descontoPct" value="10" step="1" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+            <div class="input-group"><div class="input-label">💸 Comissão p/ Parceiro</div><div class="input-wrap has-suffix"><input type="number" id="comissaoParcPct" value="5" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Capas via parceiro / mês</span><span style="font-size:14px;font-weight:700;color:var(--blue);" id="embCapas">0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Preço com desconto</span><span style="font-size:14px;font-weight:700;color:var(--gold);" id="embPrecoDesc">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Perda de receita (desconto)</span><span style="font-size:14px;font-weight:700;color:var(--red);" id="embPerdaReceita">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão paga parceiros / mês</span><span style="font-size:14px;font-weight:700;color:var(--red);" id="embComissaoParc">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--orange-soft);border:1px solid rgba(240,145,58,0.25);border-radius:10px;"><span style="font-size:13px;font-weight:700;color:var(--orange);">Custo Total Embaixador</span><span style="font-size:14px;font-weight:800;color:var(--orange);" id="embCustoTotal">R$ 0</span></div>
+          </div>
+          <div class="note-box">💡 A comissão do parceiro incide sobre o preço com desconto. O custo do anfitrião (R$/un) continua valendo para todas as vendas, inclusive as indicadas.</div>
+        </div></div>
+      </div>
+
       <!-- Equipe -->
       <div class="card">
         <div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">👥</div><div><div class="card-title">Equipe & Comissão</div><div class="card-subtitle">Salário fixo + comissão por unidade vendida</div></div></div>
@@ -206,6 +227,7 @@
           <div class="dre-row"><span style="font-weight:700;">Receita Bruta</span><span style="font-weight:700;" id="dreReceita"></span></div>
           <div class="dre-row red"><span id="dreImpostosLabel">(-) Impostos</span><span id="dreImpostos"></span></div>
           <div class="dre-row red"><span>(-) Custos Variáveis</span><span id="dreCustosVar"></span></div>
+          <div class="dre-row red" id="dreEmbRow" style="font-size:12px;padding-left:20px;display:none;"><span style="color:var(--orange);">  └ Comissão Embaixador</span><span id="dreEmbComissao" style="color:var(--orange);"></span></div>
           <div class="dre-row"><span style="font-weight:700;">Margem Contribuição</span><span style="font-weight:700;" id="dreMargem"></span></div>
           <div class="dre-row red"><span>(-) Custos Fixos</span><span id="dreCustosFixos"></span></div>
           <div class="dre-row red"><span>(-) Salários Fixos</span><span id="dreEquipe"></span></div>
@@ -302,14 +324,27 @@
     const tj=parseFloat(document.getElementById('taxaJuros').value)||0;
     const vum=parseFloat(document.getElementById('vidaUtilMaquina').value)||1;
     const vue=parseFloat(document.getElementById('vidaUtilEstrutura').value)||1;
-    const capasMes=cpd*30,recBruta=capasMes*pv,fatAnual=recBruta*12;
+    // Embaixador inputs
+    const parcPct=parseFloat(document.getElementById('parcVendasPct').value)||0;
+    const descPct=parseFloat(document.getElementById('descontoPct').value)||0;
+    const comParcPct=parseFloat(document.getElementById('comissaoParcPct').value)||0;
+    const capasMes=cpd*30;
+    // Embaixador: volume e impacto na receita
+    const capasParc=capasMes*(parcPct/100);
+    const pvComDesc=pv*(1-descPct/100);
+    const perdaDesconto=capasParc*pv*(descPct/100);
+    const comissaoParcMes=capasParc*pvComDesc*(comParcPct/100);
+    const embCustoTotal=perdaDesconto+comissaoParcMes;
+    // Receita já líquida de descontos
+    const recBruta=capasMes*pv-perdaDesconto;
+    const fatAnual=recBruta*12;
     const capexEst=est*cc,capexTotal=cxm+cxe+capexEst+cxc;
     const dep=(cxm/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
     const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
     const cu=parseFloat(document.getElementById('comissaoUnitaria').value)||0;
     const cvUnit=cc+ct+cm+ce,cvMes=capasMes*cvUnit;
     const comissaoTotalMes=capasMes*cu;
-    const cvTotal=cvMes+comissaoTotalMes;
+    const cvTotal=cvMes+comissaoTotalMes+comissaoParcMes;
     const mc=recLiq-cvTotal;
     const cfPorKiosk=alg+eng,cfCompart=sis+con+trf+agn,cfTotal1=cfPorKiosk+cfCompart;
     const salarioFixoTotal=funcionarios.reduce((s,f)=>s+f.salarioFixo,0);
@@ -317,9 +352,13 @@
     atualizarStats();
     const ebitda=mc-cfTotal1-salarioFixoTotal,lucroLiq=ebitda-dep-juros;
     const mEbitda=recBruta>0?(ebitda/recBruta)*100:0,mLiq=recBruta>0?(lucroLiq/recBruta)*100:0;
-    const mcUnit=pv>0?pv-cvUnit-cu-(pv*simp.aliquota):0;
+    // Break-even com blended MCu (mix normal + parceiro)
+    const mcUnit_normal=pv-cvUnit-cu-(pv*simp.aliquota);
+    const mcUnit_parc=pvComDesc-cvUnit-cu-(pvComDesc*simp.aliquota)-(pvComDesc*(comParcPct/100));
+    const wNormal=(100-parcPct)/100,wParc=parcPct/100;
+    const mcUnit=mcUnit_normal*wNormal+mcUnit_parc*wParc;
     const cfTotaisFixos=cfTotal1+salarioFixoTotal+dep+juros;
-    const beCapas=mcUnit>0?Math.ceil(cfTotaisFixos/mcUnit):0,beDia=Math.ceil(beCapas/30),beFat=beCapas*pv;
+    const beCapas=mcUnit>0?Math.ceil(cfTotaisFixos/mcUnit):0,beDia=Math.ceil(beCapas/30),beFat=beCapas*(pv*(1-(parcPct/100)*(descPct/100)));
     const payback=lucroLiq>0?capexTotal/lucroLiq:Infinity;
     const roiM=capexTotal>0?(lucroLiq/capexTotal)*100:0,roiA=roiM*12;
     const isLuc=lucroLiq>0,diffBE=capasMes-beCapas;
@@ -378,6 +417,17 @@
     const pf=document.getElementById('progressFill');
     pf.style.width=Math.min(roiM,100)+'%';
     pf.style.background=roiM>=15?'var(--green)':roiM>=8?'var(--gold)':'var(--red)';
+    // Embaixador display
+    document.getElementById('embCapas').textContent=Math.round(capasParc)+' capas';
+    document.getElementById('embPrecoDesc').textContent=formatCD(pvComDesc);
+    document.getElementById('embPerdaReceita').textContent='- '+formatC(perdaDesconto);
+    document.getElementById('embComissaoParc').textContent='- '+formatC(comissaoParcMes);
+    document.getElementById('embCustoTotal').textContent='- '+formatC(embCustoTotal);
+    document.getElementById('embImpactoHeader').textContent='- '+formatC(embCustoTotal)+' impacto';
+    // DRE linha embaixador
+    const dreEmbRow=document.getElementById('dreEmbRow');
+    dreEmbRow.style.display=comissaoParcMes>0?'flex':'none';
+    document.getElementById('dreEmbComissao').textContent='- '+formatC(comissaoParcMes);
   }
   document.addEventListener('DOMContentLoaded',function(){renderFuncionarios();calcular();});
 </script>
