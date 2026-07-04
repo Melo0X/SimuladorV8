@@ -133,7 +133,7 @@
           <div class="grid-2">
             <div class="input-group"><div class="input-label">👥 Nº de Parceiros</div><div class="input-wrap has-suffix"><input type="number" id="numParceiros" value="10" step="1" min="0" oninput="calcular()"><span class="input-suffix">part.</span></div></div>
             <div class="input-group"><div class="input-label">📊 Vendas via Parceiro</div><div class="input-wrap has-suffix"><input type="number" id="parcVendasPct" value="20" step="1" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
-            <div class="input-group"><div class="input-label">🎁 Desconto p/ Cliente</div><div class="input-wrap has-suffix"><input type="number" id="descontoPct" value="10" step="1" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+            <div class="input-group"><div class="input-label">🎁 Desconto p/ Cliente</div><div class="input-wrap has-suffix"><input type="number" id="descontoPct" value="5" step="1" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
             <div class="input-group"><div class="input-label">💸 Comissão p/ Parceiro</div><div class="input-wrap has-suffix"><input type="number" id="comissaoParcPct" value="5" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
           </div>
           <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
@@ -150,7 +150,7 @@
       <!-- Equipe -->
       <div class="card">
         <div class="card-header"><div class="card-icon" style="background:var(--purple-soft);">👥</div><div><div class="card-title">Equipe & Comissão</div><div class="card-subtitle">Salário fixo + comissão por unidade vendida</div></div></div>
-        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-suffix"><input type="number" id="comissaoPct" value="5" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+        <div class="input-group" style="margin-bottom:16px;"><div class="input-label">💵 Comissão por Case Vendido</div><div class="input-wrap has-suffix"><input type="number" id="comissaoPct" value="3" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
         <div id="funcContainer"></div>
         <button class="btn-add-func" onclick="addFuncionario()">+ Adicionar Funcionário</button>
         <div class="func-total"><span>Custo Total Equipe</span><span id="custoEquipeValor">R$ 0</span></div>
