@@ -51,7 +51,7 @@
     .collapsible-header.open .ch-arrow{transform:rotate(90deg);}
     .collapsible-header.open{border-radius:14px 14px 0 0;}
     .collapsible-body{max-height:0;overflow:hidden;transition:max-height .35s ease;border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;background:var(--bg-card);}
-    .collapsible-body.open{max-height:800px;}
+    .collapsible-body.open{max-height:1400px;}
     .collapsible-body-inner{padding:18px;}
     .func-card{background:var(--bg-input);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
     .func-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -147,6 +147,30 @@
         </div></div>
       </div>
 
+      <!-- TikTok Shop -->
+      <div>
+        <div class="collapsible-header" onclick="toggleCollapse('tt')"><div class="ch-left"><span style="font-size:16px;">📱</span><span class="ch-title">TikTok Shop</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="ttMcHeader" style="color:var(--purple);">R$ 0 MC</span><span class="ch-arrow" id="ttArrow">▶</span></div></div>
+        <div class="collapsible-body" id="ttBody"><div class="collapsible-body-inner">
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">🏷️ Preço TikTok</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="ttPreco" value="65" step="1" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">📦 Pedidos / Dia</div><div class="input-wrap has-suffix"><input type="number" id="ttPedidosDia" value="5" step="1" min="0" oninput="calcular()"><span class="input-suffix">/dia</span></div></div>
+            <div class="input-group"><div class="input-label">👥 Comissão Afiliado</div><div class="input-wrap has-suffix"><input type="number" id="ttComissaoAfil" value="10" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+            <div class="input-group"><div class="input-label">📊 Vendas via Afiliado</div><div class="input-wrap has-suffix"><input type="number" id="ttPctAfil" value="50" step="5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+            <div class="input-group"><div class="input-label">🛍️ Embalagem Envio</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="ttEmbalagem" value="3" step="0.5" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">↩️ Taxa Devolução</div><div class="input-wrap has-suffix"><input type="number" id="ttDevolucao" value="3" step="0.5" min="0" max="100" oninput="calcular()"><span class="input-suffix">%</span></div></div>
+            <div class="input-group" style="grid-column:1/-1;"><div class="input-label">📢 Tráfego TikTok Ads (fixo)</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="ttTrafego" value="0" step="100" min="0" oninput="calcular()"></div></div>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Pedidos líquidos / mês</span><span style="font-size:14px;font-weight:700;color:var(--blue);" id="ttPedidosMes">0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Receita bruta / mês</span><span style="font-size:14px;font-weight:700;color:var(--green);" id="ttReceita">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);" id="ttPlatLabel">Plataforma (com. + taxa + frete)</span><span style="font-size:14px;font-weight:700;color:var(--red);" id="ttCustoPlat">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Comissão afiliados</span><span style="font-size:14px;font-weight:700;color:var(--red);" id="ttCustoAfil">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--bg-input);border-radius:10px;"><span style="font-size:12px;color:var(--text-secondary);">Produto + envio (capinha, tinta, emb.)</span><span style="font-size:14px;font-weight:700;color:var(--red);" id="ttCustoProduto">R$ 0</span></div>
+            <div style="display:flex;justify-content:space-between;padding:10px 12px;background:var(--purple-soft);border:1px solid rgba(155,107,246,0.25);border-radius:10px;"><span style="font-size:13px;font-weight:700;color:var(--purple);">Margem Contribuição Canal</span><span style="font-size:14px;font-weight:800;color:var(--purple);" id="ttMcCanal">R$ 0</span></div>
+          </div>
+          <div class="note-box">💡 Taxas pós-15/jul/2026 aplicadas automaticamente pelo preço: ≥R$50 → 6% + R$6,00/item; &lt;R$50 → 10% + R$4,00/item. Frete SFP: 6% do GMV. O faturamento TikTok soma no Simples Nacional consolidado. Impressão sob demanda: usa capinha + tinta do estoque.</div>
+        </div></div>
+      </div>
       <!-- Equipe -->
       <div>
         <div class="collapsible-header" onclick="toggleCollapse('equipe')"><div class="ch-left"><span style="font-size:16px;">👥</span><span class="ch-title">Equipe & Comissão</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="equipeHeaderTotal" style="color:var(--purple);">R$ 0</span><span class="ch-arrow" id="equipeArrow">▶</span></div></div>
@@ -356,11 +380,29 @@
     const embCustoTotal=perdaDesconto+comissaoParcMes;
     // Receita já líquida de descontos
     const recBruta=capasMes*pv-perdaDesconto;
-    const fatAnual=recBruta*12;
+    // TikTok Shop
+    const ttPv=parseFloat(document.getElementById('ttPreco').value)||0;
+    const ttPd=parseFloat(document.getElementById('ttPedidosDia').value)||0;
+    const ttAfilPct=parseFloat(document.getElementById('ttComissaoAfil').value)||0;
+    const ttPctAfil=parseFloat(document.getElementById('ttPctAfil').value)||0;
+    const ttEmb=parseFloat(document.getElementById('ttEmbalagem').value)||0;
+    const ttDev=parseFloat(document.getElementById('ttDevolucao').value)||0;
+    const ttTraf=parseFloat(document.getElementById('ttTrafego').value)||0;
+    const ttComPlat=ttPv>=50?0.06:0.10;
+    const ttTaxaFixa=ttPv>=50?6:4;
+    const ttPedidosLiq=ttPd*30*(1-ttDev/100);
+    const ttRec=ttPedidosLiq*ttPv;
+    const ttCustoPlat=ttPedidosLiq*(ttPv*(ttComPlat+0.06)+ttTaxaFixa);
+    const ttCustoAfil=ttPedidosLiq*ttPv*(ttAfilPct/100)*(ttPctAfil/100);
+    const ttCustoProd=ttPedidosLiq*(cc+ct+ttEmb);
+    const ttCustos=ttCustoPlat+ttCustoAfil+ttCustoProd;
+    // Consolidado: faturamento total para o Simples
+    const recTotal=recBruta+ttRec;
+    const fatAnual=recTotal*12;
     const capexEst=est*cc,capexTotal=cxm+cxe+cxc+cxti+cxo;
     const depBaseImport=Math.max(0,cxm-capexEst);
     const dep=(depBaseImport/vum)+(cxe/vue),juros=(capexTotal*(tj/100))/12;
-    const simp=calcSimples(fatAnual),impostos=recBruta*simp.aliquota,recLiq=recBruta-impostos;
+    const simp=calcSimples(fatAnual),impostos=recTotal*simp.aliquota,recLiq=recTotal-impostos;
     const comissaoPctVal=parseFloat(document.getElementById('comissaoPct').value)||0;
     const cuNormal=pv*(comissaoPctVal/100);
     const cuParc=pvComDesc*(comissaoPctVal/100);
@@ -369,14 +411,17 @@
     const capasMesNormal=capasMes-capasParc;
     const comissaoTotalMes=capasMesNormal*cuNormal+capasParc*cuParc;
     const cuBlended=capasMes>0?comissaoTotalMes/capasMes:cuNormal;
-    const cvTotal=cvMes+comissaoTotalMes+comissaoParcMes;
+    const cvTotal=cvMes+comissaoTotalMes+comissaoParcMes+ttCustos;
     const mc=recLiq-cvTotal;
-    const cfPorKiosk=alg+eng,cfCompart=sis+con+trf+agn+maq,cfTotal1=cfPorKiosk+cfCompart;
+    // MC do canal TikTok (líquida de impostos próprios)
+    const ttImpostos=ttRec*simp.aliquota;
+    const ttMc=ttRec-ttImpostos-ttCustos;
+    const cfPorKiosk=alg+eng,cfCompart=sis+con+trf+agn+maq+ttTraf,cfTotal1=cfPorKiosk+cfCompart;
     const salarioFixoTotal=funcionarios.reduce((s,f)=>s+f.salarioFixo,0);
     const eq=calcEquipe(),custoEq=eq.total;
     atualizarStats();
     const ebitda=mc-cfTotal1-salarioFixoTotal,lucroLiq=ebitda-dep-juros;
-    const mEbitda=recBruta>0?(ebitda/recBruta)*100:0,mLiq=recBruta>0?(lucroLiq/recBruta)*100:0;
+    const mEbitda=recTotal>0?(ebitda/recTotal)*100:0,mLiq=recTotal>0?(lucroLiq/recTotal)*100:0;
     // Break-even com blended MCu (mix normal + parceiro)
     const mcUnit_normal=pv-cvUnit-cuNormal-(pv*simp.aliquota);
     const mcUnit_parc=pvComDesc-cvUnit-cuParc-(pvComDesc*simp.aliquota)-(pvComDesc*(comParcPct/100));
@@ -419,7 +464,16 @@
     document.getElementById('diffEbitdaLucro').textContent=formatC(ebitda-lucroLiq)+' deduzidos: Depreciação ('+formatC(dep)+') + Juros ('+formatC(juros)+')';
     document.getElementById('simplesAliquota').textContent=(simp.aliquota*100).toFixed(1)+'%';
     document.getElementById('simplesFaixa').textContent=simp.faixa;
-    document.getElementById('dreReceita').textContent=formatC(recBruta);
+    document.getElementById('dreReceita').textContent=formatC(recTotal);
+    // TikTok display
+    document.getElementById('ttPedidosMes').textContent=Math.round(ttPedidosLiq)+' pedidos';
+    document.getElementById('ttReceita').textContent=formatC(ttRec);
+    document.getElementById('ttPlatLabel').textContent='Plataforma ('+(ttComPlat*100).toFixed(0)+'% + R$'+ttTaxaFixa+' + 6% frete)';
+    document.getElementById('ttCustoPlat').textContent='- '+formatC(ttCustoPlat);
+    document.getElementById('ttCustoAfil').textContent='- '+formatC(ttCustoAfil);
+    document.getElementById('ttCustoProduto').textContent='- '+formatC(ttCustoProd);
+    document.getElementById('ttMcCanal').textContent=formatC(ttMc);
+    document.getElementById('ttMcHeader').textContent=formatC(ttMc)+' MC';
     document.getElementById('dreImpostosLabel').textContent='(-) Impostos ('+(simp.aliquota*100).toFixed(1)+'%)';
     document.getElementById('dreImpostos').textContent='- '+formatC(impostos);
     document.getElementById('dreCustosVar').textContent='- '+formatC(cvTotal);
