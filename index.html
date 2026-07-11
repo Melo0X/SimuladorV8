@@ -255,9 +255,12 @@
         <div class="card-header"><div class="card-icon" style="background:var(--red-soft);">📋</div><div><div class="card-title">DRE Mensal</div><div class="card-subtitle">Demonstrativo — 1 Kiosk</div></div></div>
         <div>
           <div class="dre-row"><span style="font-weight:700;">Receita Bruta</span><span style="font-weight:700;" id="dreReceita"></span></div>
+          <div class="dre-row" style="font-size:12px;padding-left:20px;"><span style="color:var(--text-secondary);">└ Kiosk</span><span id="dreReceitaKiosk" style="color:var(--text-secondary);"></span></div>
+          <div class="dre-row" id="dreReceitaTTRow" style="font-size:12px;padding-left:20px;display:none;"><span style="color:var(--purple);">└ TikTok Shop</span><span id="dreReceitaTT" style="color:var(--purple);"></span></div>
           <div class="dre-row red"><span id="dreImpostosLabel">(-) Impostos</span><span id="dreImpostos"></span></div>
           <div class="dre-row red"><span>(-) Custos Variáveis</span><span id="dreCustosVar"></span></div>
           <div class="dre-row red" id="dreEmbRow" style="font-size:12px;padding-left:20px;display:none;"><span style="color:var(--orange);">  └ Comissão Embaixador</span><span id="dreEmbComissao" style="color:var(--orange);"></span></div>
+          <div class="dre-row red" id="dreTTRow" style="font-size:12px;padding-left:20px;display:none;"><span style="color:var(--purple);">  └ Custos TikTok Shop</span><span id="dreTTCustos" style="color:var(--purple);"></span></div>
           <div class="dre-row"><span style="font-weight:700;">Margem Contribuição</span><span style="font-weight:700;" id="dreMargem"></span></div>
           <div class="dre-row red"><span>(-) Custos Fixos</span><span id="dreCustosFixos"></span></div>
           <div class="dre-row red"><span>(-) Salários Fixos</span><span id="dreEquipe"></span></div>
@@ -465,6 +468,11 @@
     document.getElementById('simplesAliquota').textContent=(simp.aliquota*100).toFixed(1)+'%';
     document.getElementById('simplesFaixa').textContent=simp.faixa;
     document.getElementById('dreReceita').textContent=formatC(recTotal);
+    document.getElementById('dreReceitaKiosk').textContent=formatC(recBruta);
+    document.getElementById('dreReceitaTTRow').style.display=ttRec>0?'flex':'none';
+    document.getElementById('dreReceitaTT').textContent=formatC(ttRec);
+    document.getElementById('dreTTRow').style.display=ttCustos>0?'flex':'none';
+    document.getElementById('dreTTCustos').textContent='- '+formatC(ttCustos);
     // TikTok display
     document.getElementById('ttPedidosMes').textContent=Math.round(ttPedidosLiq)+' pedidos';
     document.getElementById('ttReceita').textContent=formatC(ttRec);
