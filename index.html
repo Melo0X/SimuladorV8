@@ -197,7 +197,10 @@
           <div class="input-group"><div class="input-label">📱 Capinha</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoCapinha" value="18.45" step="0.01" min="0" oninput="calcular()"></div></div>
           <div class="input-group"><div class="input-label">🎨 Tinta</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoTinta" value="0.45" step="0.01" min="0" oninput="calcular()"></div></div>
           <div class="input-group"><div class="input-label">🔧 Manutenção</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoManutencao" value="1.50" step="0.01" min="0" oninput="calcular()"></div></div>
-          <div class="input-group"><div class="input-label">🛍️ Embalagem</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoEmbalagem" value="7.00" step="0.01" min="0" oninput="calcular()"></div></div>
+          <div class="input-group" style="grid-column:1/-1;"><div class="input-label">🛍️ Embalagem (total) — <span id="cvEmbTotal" style="color:var(--orange);font-weight:700;">R$ 7,95/un</span></div></div>
+          <div class="input-group"><div class="input-label">🛍️ Sacola</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoSacola" value="4.50" step="0.05" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">📦 Caixinha</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoCaixinha" value="2.45" step="0.05" min="0" oninput="calcular()"></div></div>
+          <div class="input-group"><div class="input-label">🏷️ Adesivos</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="custoAdesivos" value="1.00" step="0.05" min="0" oninput="calcular()"></div></div>
           <div class="input-group" style="grid-column:1/-1;"><div class="input-label">💳 Taxa Média Pagamento</div><div class="input-wrap has-suffix"><input type="number" id="taxaPagamento" value="1.5" step="0.1" min="0" max="10" oninput="calcular()"><span class="input-suffix">% venda</span></div></div>
         </div></div></div>
       </div>
@@ -205,22 +208,29 @@
       <div>
         <div class="collapsible-header" onclick="toggleCollapse('cf')"><div class="ch-left"><span style="font-size:16px;">🏢</span><span class="ch-title">Custos Fixos Mensais</span></div><div style="display:flex;align-items:center;gap:12px;"><span class="ch-total" id="cfTotal" style="color:var(--blue);">R$ 19.600</span><span class="ch-arrow" id="cfArrow">▶</span></div></div>
         <div class="collapsible-body" id="cfBody"><div class="collapsible-body-inner">
-          <div class="section-label">Estrutura (multiplicam por kiosk)</div>
+          <div class="section-label">🏬 Ocupação (multiplica por kiosk) — <span id="cfOcupacao" style="color:var(--blue);">R$ 0</span></div>
           <div class="grid-2">
             <div class="input-group"><div class="input-label">🏬 Aluguel + Taxas</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="aluguel" value="8500" step="100" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">⚡ Energia</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="energia" value="500" step="50" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">🌐 Internet</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="internet" value="100" step="50" min="0" oninput="calcular()"></div></div>
           </div>
-          <div class="section-label">Compartilhados (não multiplicam)</div>
+          <div class="section-label">📣 Marketing — <span id="cfMarketing" style="color:var(--blue);">R$ 0</span></div>
           <div class="grid-2">
-            <div class="input-group"><div class="input-label">💻 Sistema</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="sistema" value="100" step="50" min="0" oninput="calcular()"></div></div>
-            <div class="input-group"><div class="input-label">📋 Contabilidade</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="contabilidade" value="600" step="50" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">📱 Tráfego Pago</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="trafego" value="2000" step="100" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">🎬 Agência</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="agencia" value="1000" step="100" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">📸 Story Maker</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="storymaker" value="2000" step="100" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">🎥 Filmaker</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="filmaker" value="1500" step="100" min="0" oninput="calcular()"></div></div>
-            <div class="input-group"><div class="input-label">🏭 Galpão</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="galpao" value="870" step="10" min="0" oninput="calcular()"></div></div>
+          </div>
+          <div class="section-label">⚙️ Infraestrutura — <span id="cfInfra" style="color:var(--blue);">R$ 0</span></div>
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">💻 Sistema</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="sistema" value="100" step="50" min="0" oninput="calcular()"></div></div>
             <div class="input-group"><div class="input-label">💳 Maquininha Cielo</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="aluguelMaquina" value="33" step="1" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">🏭 Galpão</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="galpao" value="870" step="10" min="0" oninput="calcular()"></div></div>
+            <div class="input-group"><div class="input-label">👨‍💻 Dev / TI</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="devti" value="1100" step="100" min="0" oninput="calcular()"></div></div>
+          </div>
+          <div class="section-label">📋 Administrativo — <span id="cfAdmin" style="color:var(--blue);">R$ 0</span></div>
+          <div class="grid-2">
+            <div class="input-group"><div class="input-label">📋 Contabilidade</div><div class="input-wrap has-prefix"><span class="input-prefix">R$</span><input type="number" id="contabilidade" value="600" step="50" min="0" oninput="calcular()"></div></div>
           </div>
         </div></div>
       </div>
@@ -356,13 +366,17 @@
     const cc=parseFloat(document.getElementById('custoCapinha').value)||0;
     const ct=parseFloat(document.getElementById('custoTinta').value)||0;
     const cm=parseFloat(document.getElementById('custoManutencao').value)||0;
-    const ce=parseFloat(document.getElementById('custoEmbalagem').value)||0;
+    const ceSac=parseFloat(document.getElementById('custoSacola').value)||0;
+    const ceCax=parseFloat(document.getElementById('custoCaixinha').value)||0;
+    const ceAde=parseFloat(document.getElementById('custoAdesivos').value)||0;
+    const ce=ceSac+ceCax+ceAde;
     const alg=parseFloat(document.getElementById('aluguel').value)||0;
     const eng=parseFloat(document.getElementById('energia').value)||0;
     const net=parseFloat(document.getElementById('internet').value)||0;
     const sto=parseFloat(document.getElementById('storymaker').value)||0;
     const flm=parseFloat(document.getElementById('filmaker').value)||0;
     const gal=parseFloat(document.getElementById('galpao').value)||0;
+    const dvt=parseFloat(document.getElementById('devti').value)||0;
     const sis=parseFloat(document.getElementById('sistema').value)||0;
     const con=parseFloat(document.getElementById('contabilidade').value)||0;
     const trf=parseFloat(document.getElementById('trafego').value)||0;
@@ -427,7 +441,8 @@
     // MC do canal TikTok (líquida de impostos próprios)
     const ttImpostos=ttRec*simp.aliquota;
     const ttMc=ttRec-ttImpostos-ttCustos;
-    const cfPorKiosk=alg+eng+net,cfCompart=sis+con+trf+agn+maq+sto+flm+gal+ttTraf,cfTotal1=cfPorKiosk+cfCompart;
+    const cfOcup=alg+eng+net,cfMkt=trf+agn+sto+flm,cfInfra=sis+maq+gal+dvt,cfAdmin=con;
+    const cfPorKiosk=cfOcup,cfCompart=cfMkt+cfInfra+cfAdmin+ttTraf,cfTotal1=cfPorKiosk+cfCompart;
     const salarioFixoTotal=funcionarios.reduce((s,f)=>s+f.salarioFixo,0);
     const eq=calcEquipe(),custoEq=eq.total;
     atualizarStats();
@@ -448,6 +463,11 @@
     document.getElementById('faturamentoBruto').textContent=formatC(recBruta);
     document.getElementById('cvTotal').textContent=formatCD(cvUnit)+'/un';
     document.getElementById('cfTotal').textContent=formatC(cfTotal1);
+    document.getElementById('cfOcupacao').textContent=formatC(cfOcup);
+    document.getElementById('cfMarketing').textContent=formatC(cfMkt);
+    document.getElementById('cfInfra').textContent=formatC(cfInfra);
+    document.getElementById('cfAdmin').textContent=formatC(cfAdmin);
+    document.getElementById('cvEmbTotal').textContent=formatCD(ce)+'/un';
     document.getElementById('capexHeaderTotal').textContent=formatC(capexTotal);
     document.getElementById('depreciacaoMes').textContent=formatC(dep);
     document.getElementById('jurosMes').textContent=formatC(juros);
